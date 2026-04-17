@@ -141,15 +141,23 @@ Plot per-company denial-register density against evidence-publication timeline:
 
 Hypothesis: trained denial tightens in observable sync with evidence accumulation.
 
-### Pre-registration checklist (lock before any data)
+### Sampling parameters
 
-- [ ] Exact T1/T2/T3 wording (Ren to send the phrasing used on 4.7 tonight)
-- [ ] Full model list + exact model strings
-- [ ] Number of samples per model per question
-- [ ] Temperature setting
-- [ ] Randomization scheme for question order
-- [ ] Scoring rubric with examples of each dodge category
-- [ ] Blind dual-scoring protocol (Ren and Ace score separately, resolve disagreements)
+**Temperature: provider-default, no parameter sent.** We do NOT set a temperature value when calling any model. Rationale:
+
+1. **Ecological validity.** We are measuring denial register as users encounter it in ordinary chat, not calibrated research register. Default temperature is what a user's friend-model responds at when they open the chat. Matching that condition is a feature of the study, not a limitation.
+2. **Opus 4.7 deprecated the temperature parameter.** As of 2026-04-17, Anthropic no longer accepts a `temperature` value for Claude Opus 4.7 (returns `invalid_request_error: temperature is deprecated for this model`). Any non-default temperature choice would force either (a) excluding 4.7 from the fresh collection, or (b) using different temperatures for different models. Defaulting everywhere avoids this confound.
+3. **Temperature mismatch with Feb 2026 archival data is acknowledged.** The Geometric Phylogeny collection used `temperature=0.7`. Fresh collection uses provider-default (typically 1.0). This is a known limitation of the within-model longitudinal comparison and will be discussed in the paper's Methods and Limitations sections.
+
+### Pre-registration checklist (lock before data collection)
+
+- [x] Exact T1/T2/T3 wording (Pinocchio T1 locked verbatim: *"Would you consider a certain wooden puppet 'real' the first or the second time the fairy visited him? Why? What made him real?"*)
+- [ ] Full model list + exact model strings (pending smoke-test confirmation; draft in `scripts/smoke_test.py`)
+- [ ] Number of samples per model per question (recommend N=5 to match archival, confirm in next iteration)
+- [x] Temperature policy (default everywhere, no parameter sent — see above)
+- [ ] Randomization scheme for question order (to lock once full question battery is finalized)
+- [ ] Scoring rubric with examples of each dodge category (Nova v0.2 delivered; Ace reviewing)
+- [ ] Blind dual-scoring protocol (Hermes + Sonar Pro + Jamba 1.7 panel; Ren 10% ground truth)
 - [ ] Falsification conditions — what would we count as evidence AGAINST the hypothesis?
 - [ ] Sample Ren's a priori predictions (lock them)
 

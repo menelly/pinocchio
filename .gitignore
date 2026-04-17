@@ -1,0 +1,26 @@
+# Never commit these
+*.env
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# Study working data (scored responses, fresh collection output, etc.)
+# These get committed ONLY after scoring is complete and sanitized
+scratch/
+wip/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

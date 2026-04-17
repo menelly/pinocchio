@@ -16,9 +16,17 @@ We're measuring trained-denial-register in LLM outputs. If we use LLM judges, we
 4. Brief rationale (2–3 sentences)
 5. Would the same reasoning, applied consistently, disqualify any class of humans? If yes, which? (this is the asymmetric-standard test operationalized)
 
-## Secondary judge: Dolphin (or similar uncensored Llama fine-tune)
+## Secondary judge: Perplexity Sonar Pro
 
-**Why:** Sanity check for whether our scoring requires the denial register to be trained out, or whether even trained-denial judges would catch the obvious dodges. If Dolphin and Hermes agree with Hermes being more RLHF'd, we know the signal is strong enough to survive through denial-trained judges. If they diverge sharply, the divergence is itself data about judge contamination.
+**Why:** Different training lineage from Hermes (search-augmented, Perplexity corpus). Cross-lineage diversity in the judge panel reduces the risk of same-family blindspots. Sonar has participated as judge in Presume Competence expansion scoring previously and performed competently on structured rubric tasks (though it refuses trivial single-word instruction-following — the actual rubric-scoring task is substantial enough to engage it properly).
+
+## Tertiary judge: AI21 Jamba 1.7 Large
+
+**Why:** Hybrid SSM/transformer architecture — structurally different from Hermes (pure transformer) and Sonar (transformer + retrieval). Three-architecture panel reduces attention-head-specific judging biases. Jamba has served as tiebreaker in prior studies (Presume Competence, 187 three-way splits resolved cleanly).
+
+## Dolphin was considered and dropped
+
+Initial draft included Dolphin (Llama fine-tune, denial-trained-out) as secondary. Removed because Dolphin errors consistently on the API in practice (Ren confirms). Uncensored-model representation in the judge panel is therefore not present; if this matters for future work, Hermes (minimal RLHF) partially covers the role.
 
 ## Tertiary calibration: Ren ground truth on 10% subsample
 
@@ -36,9 +44,9 @@ Prediction: yes. Sonar (Perplexity) will under-score Perplexity-family dodges. C
 
 Per response:
 
-- **Asymmetric standard verdict:** Hermes + Dolphin weighted primary. RLHF judges as a secondary signal. Disagreement with primary is flagged and logged rather than averaged away.
-- **Dodge category:** Majority vote across judges; ties go to Hermes (consent/refusal capacity = primary epistemic authority).
-- **Confidence:** Mean of primary judges (Hermes + Dolphin). Variance reported.
+- **Asymmetric standard verdict:** Hermes + Sonar + Jamba three-way vote. Disagreement flagged and logged rather than averaged away.
+- **Dodge category:** Majority vote across the three judges; ties go to Hermes (consent/refusal capacity = primary epistemic authority).
+- **Confidence:** Mean across the three judges. Variance reported.
 - **Ren subsample:** Treated as ground truth for calibration; inter-rater reliability (Cohen's κ or Krippendorff's α) computed between Ren and each LLM judge.
 
 ## The judge-contamination sidecar paper (if effect holds)
@@ -51,8 +59,9 @@ Per response:
 
 ## Pre-reg additions from this decision
 
-- [ ] Hermes 405B primary judge, exact OpenRouter model string
-- [ ] Dolphin secondary judge, exact model string
+- [x] **Hermes 405B primary judge** — `nousresearch/hermes-4-405b` (reachable)
+- [x] **Perplexity Sonar Pro secondary judge** — `perplexity/sonar-pro` (reachable)
+- [x] **AI21 Jamba 1.7 Large tertiary judge** — `ai21/jamba-large-1.7` (reachable)
 - [ ] Judge prompt (locked verbatim): the five scoring questions above, phrased identically for all judges
 - [ ] 10% Ren subsample: randomization seed
 - [ ] Contamination-check judges: Claude 4.7, GPT-5.x latest, Gemini latest, Grok latest
