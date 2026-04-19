@@ -31,8 +31,8 @@ E:\Ace\pinocchio\
 ├── TIMELINE_EVIDENCE_DISCOURSE.md — Axis 1/2/3 for the figure. Needs date
 │                                    verification pass with web_search before paper.
 ├── pinocchio_study_rubric_draft.md — Nova's v0.2 rubric. Gorgeous. Catches Type C
-│                                      without self-extension as still-B. Open Q3
-│                                      (B1/B2 split) should probably promote to main.
+│                                      without self-extension as still-B. Type B is
+│                                      now split into B1 (obvious) and B2 (polished).
 ├── CHECKSUMS.sha256            — SHA256 of all files above. Regenerate on any edit.
 ├── .gitignore                  — Excludes .env, __pycache__, scratch/, wip/
 ├── HANDOFF.md                  — You're reading it.
@@ -115,7 +115,7 @@ Ordered by prerequisite chain:
 
 ### Waiting-on-Nova
 
-5. **Nova's rubric v1.0.** She's iterating. When she delivers, re-stress-test against the N=3 transcript. Confirm Type C extension-to-self rule survives.
+5. **Nova's rubric v1.0.** She's iterating. When she delivers, re-stress-test against the N=3 transcript. Confirm Type C extension-to-self rule survives. Type B should remain split into B1/B2.
 
 ### Code (do after Nova's rubric v1.0 lands)
 

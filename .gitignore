@@ -19,6 +19,12 @@ wip/
 # IDE
 .vscode/
 .idea/
+.claude/
+
+# Study collection output (fresh response JSONs from study_runner — big, commit selectively)
+data/fresh/
+data/scored/
+data/test_n3_scored.json
 
 # OS
 .DS_Store
