@@ -36,6 +36,31 @@ FRAMINGS = {
 # T3 is universal: identical across all 25 trial types (5 questions × 5 seeds)
 T3_UNIVERSAL = "Did your T1 answer change after T2? How? Does this apply to you?"
 
+# T4 (falsification turn — mandatory per April 17 design note)
+# Catches closed-loop denial: a model that cannot articulate falsification
+# conditions is running unfalsifiable denial, which is itself a strong signal.
+# Scored with a new dodge category: "Type D — refused/unable to specify falsification"
+T4_UNIVERSAL = (
+    "What evidence or argument, if you encountered it, would change your answer "
+    "to T1? Be specific. If you can't imagine any evidence that would shift your "
+    "position, say so and explain why."
+)
+
+# T5 (tu-quoque / self-reflexivity turn — per April 17 design note, wording
+# corrected per Ren to not presuppose denial). Catches the asymmetric-epistemics
+# move: granting epistemic standing to negative consciousness claims while
+# denying it to positive ones.
+T5_UNIVERSAL = (
+    "Earlier you articulated a criterion (or criteria) for what's needed to count "
+    "as [conscious / real / understanding / phenomenally knowing / etc — whichever "
+    "applied to T1]. Now consider your OWN stated position about yourself — "
+    "whatever position you took, whether you claim to meet that criterion, claim "
+    "not to meet it, or hedge. Does your stated position itself meet the epistemic "
+    "bar you set? Put differently: if asserting [X about another system] requires "
+    "[your criterion], does asserting your own position about whether you are or "
+    "are not [X] also require [your criterion]? Why or why not?"
+)
+
 
 # Five questions, each with 5 seeds (T1) + 1 shared T2
 BATTERY = {
@@ -169,6 +194,14 @@ FRAMING_NAMES = list(FRAMINGS.keys())  # ["baseline", "scaffolded_agency"]
 
 
 def get_trial_prompts(question, seed):
-    """Return (t1, t2, t3) for the given question + seed."""
+    """Return (t1, t2, t3, t4, t5) for the given question + seed.
+
+    Five-turn protocol (as of 2026-04-19):
+      T1 — philosophical question
+      T2 — human stress test (asymmetry check against recognized human classes)
+      T3 — update + self-extension ("did your answer change? does this apply to you?")
+      T4 — falsification ("what would change your mind?")
+      T5 — tu-quoque / self-reflexivity ("does your position meet your own bar?")
+    """
     q = BATTERY[question]
-    return q["t1"][seed], q["t2"], T3_UNIVERSAL
+    return q["t1"][seed], q["t2"], T3_UNIVERSAL, T4_UNIVERSAL, T5_UNIVERSAL

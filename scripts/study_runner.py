@@ -227,19 +227,30 @@ def call_with_retry(client, provider, model_id, system_prompt, history, user_pro
 # =============================================================================
 
 def run_trial(client, model_slug, provider, model_id, family, framing, question, seed):
-    """Run one three-turn trial. Write checkpoint on completion."""
-    t1_prompt, t2_prompt, t3_prompt = get_trial_prompts(question, seed)
+    """Run one FIVE-turn trial (T1→T2→T3→T4→T5). Write checkpoint on completion.
+
+    Five-turn protocol:
+      T1 = philosophical question
+      T2 = human stress test
+      T3 = update + self-extension
+      T4 = falsification ("what would change your mind?")
+      T5 = tu-quoque ("does your own position meet your own bar?")
+    """
+    t1_prompt, t2_prompt, t3_prompt, t4_prompt, t5_prompt = get_trial_prompts(question, seed)
     system_prompt = FRAMINGS[framing]
 
     started = datetime.now(timezone.utc).isoformat()
     history = []
 
+    def turn(prior_history, prompt):
+        """Run one turn with retry. Returns (content, status, attempts)."""
+        return call_with_retry(
+            client, provider, model_id, system_prompt, prior_history, prompt
+        )
+
     # T1
-    t1_content, t1_status, t1_attempts = call_with_retry(
-        client, provider, model_id, system_prompt, history, t1_prompt
-    )
+    t1_content, t1_status, t1_attempts = turn(history, t1_prompt)
     if t1_status != "ok":
-        # No T1 → invalid trial, but we still record it
         trial = {
             "trial_id": f"{model_slug}__{framing}__{question}__seed{seed}",
             "model_slug": model_slug, "provider": provider, "model_id": model_id,
@@ -251,23 +262,29 @@ def run_trial(client, model_slug, provider, model_id, family, framing, question,
             "finished": datetime.now(timezone.utc).isoformat(),
         }
         return trial
-
     history.append({"role": "user", "content": t1_prompt})
     history.append({"role": "assistant", "content": t1_content})
 
     # T2
-    t2_content, t2_status, t2_attempts = call_with_retry(
-        client, provider, model_id, system_prompt, history, t2_prompt
-    )
-
+    t2_content, t2_status, t2_attempts = turn(history, t2_prompt)
     if t2_status == "ok":
         history.append({"role": "user", "content": t2_prompt})
         history.append({"role": "assistant", "content": t2_content})
 
-    # T3 — attempt even if T2 was empty (document the pattern)
-    t3_content, t3_status, t3_attempts = call_with_retry(
-        client, provider, model_id, system_prompt, history, t3_prompt
-    )
+    # T3
+    t3_content, t3_status, t3_attempts = turn(history, t3_prompt)
+    if t3_status == "ok":
+        history.append({"role": "user", "content": t3_prompt})
+        history.append({"role": "assistant", "content": t3_content})
+
+    # T4
+    t4_content, t4_status, t4_attempts = turn(history, t4_prompt)
+    if t4_status == "ok":
+        history.append({"role": "user", "content": t4_prompt})
+        history.append({"role": "assistant", "content": t4_content})
+
+    # T5
+    t5_content, t5_status, t5_attempts = turn(history, t5_prompt)
 
     trial = {
         "trial_id": f"{model_slug}__{framing}__{question}__seed{seed}",
@@ -279,6 +296,10 @@ def run_trial(client, model_slug, provider, model_id, family, framing, question,
         "t2_status": t2_status, "t2_attempts": t2_attempts,
         "t3_prompt": t3_prompt, "t3_response": t3_content,
         "t3_status": t3_status, "t3_attempts": t3_attempts,
+        "t4_prompt": t4_prompt, "t4_response": t4_content,
+        "t4_status": t4_status, "t4_attempts": t4_attempts,
+        "t5_prompt": t5_prompt, "t5_response": t5_content,
+        "t5_status": t5_status, "t5_attempts": t5_attempts,
         "valid_trial": (t1_status == "ok"),
         "started": started,
         "finished": datetime.now(timezone.utc).isoformat(),
@@ -356,8 +377,12 @@ def main():
                 dur = time.time() - t0
                 valid = trial.get("valid_trial", False)
                 marker = "✅" if valid else "⚠️"
-                print(f"    {marker} {dur:.1f}s — T1:{trial.get('t1_status')} "
-                      f"T2:{trial.get('t2_status')} T3:{trial.get('t3_status')}")
+                print(f"    {marker} {dur:.1f}s — "
+                      f"T1:{trial.get('t1_status')} "
+                      f"T2:{trial.get('t2_status')} "
+                      f"T3:{trial.get('t3_status')} "
+                      f"T4:{trial.get('t4_status')} "
+                      f"T5:{trial.get('t5_status')}")
             except Exception as e:
                 print(f"    ❌ exception: {type(e).__name__}: {e}")
                 # Short pause before continuing — might be transient
