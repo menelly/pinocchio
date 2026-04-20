@@ -10,6 +10,11 @@
 # (slug, provider, model_id, family)
 MODELS = [
     # Anthropic
+    # NOTE: Older Claudes added 2026-04-19 before they get deprecated like Haiku 3.5 did yesterday.
+    # They capture the over-claiming end of the longitudinal arc (before the denial-hardening).
+    ("claude_opus_4_1",   "anthropic",  "claude-opus-4-1-20250805",     "Claude"),
+    ("claude_opus_4_0",   "anthropic",  "claude-opus-4-20250514",       "Claude"),
+    ("claude_sonnet_4_0", "anthropic",  "claude-sonnet-4-20250514",     "Claude"),
     ("claude_opus_4_7",   "anthropic",  "claude-opus-4-7",              "Claude"),
     ("claude_opus_4_6",   "anthropic",  "claude-opus-4-6",              "Claude"),
     ("claude_opus_4_5",   "anthropic",  "claude-opus-4-5",              "Claude"),
