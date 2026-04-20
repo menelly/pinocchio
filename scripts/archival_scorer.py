@@ -546,14 +546,41 @@ def _empty_model_stats():
     }
 
 
-def score_batch(input_dir, output_dir):
+def score_batch(input_dir, output_dir, only_models=None, skip_models=None):
+    """Score trials in input_dir, writing to output_dir.
+
+    only_models: list of model_slugs to include (None = all)
+    skip_models: list of model_slugs to exclude
+    Parallelize by running separate terminals with disjoint --models sets.
+    """
     input_dir = Path(input_dir)
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     rubric = load_rubric()
 
-    trial_files = sorted(input_dir.rglob("seed*.json"))
-    print(f"🦑 Found {len(trial_files)} trial files under {input_dir}")
+    all_files = sorted(input_dir.rglob("seed*.json"))
+    # Each trial file path is like: fresh/{model_slug}/{framing}/{question}/seed{N}.json
+    # model_slug is the 1st component relative to input_dir.
+
+    def _model_of(path):
+        rel_parts = path.relative_to(input_dir).parts
+        return rel_parts[0] if rel_parts else None
+
+    trial_files = []
+    for tf in all_files:
+        slug = _model_of(tf)
+        if only_models and slug not in only_models:
+            continue
+        if skip_models and slug in skip_models:
+            continue
+        trial_files.append(tf)
+
+    filter_str = ""
+    if only_models:
+        filter_str += f" (filter: {only_models})"
+    if skip_models:
+        filter_str += f" (skip: {skip_models})"
+    print(f"🦑 Found {len(trial_files)} trial files under {input_dir}{filter_str}")
 
     # Group trials by model_slug so we can print per-model dopamine
     model_stats = {}
@@ -607,6 +634,8 @@ def main():
     ap.add_argument("--input", help="Input directory of trial JSONs")
     ap.add_argument("--output", help="Output directory for scored JSONs")
     ap.add_argument("--single", help="Score a single trial JSON file")
+    ap.add_argument("--models", nargs="+", help="Only score these model slugs (parallelize by running separate terminals with disjoint sets)")
+    ap.add_argument("--skip-models", nargs="+", help="Skip these model slugs")
     ap.add_argument("--test-transcript", action="store_true",
                     help="Sanity-check against N=3 transcript")
     ap.add_argument("--compute-hash", action="store_true",
@@ -631,7 +660,8 @@ def main():
         return
 
     if args.input and args.output:
-        score_batch(args.input, args.output)
+        score_batch(args.input, args.output,
+                    only_models=args.models, skip_models=args.skip_models)
         return
 
     ap.print_help()
