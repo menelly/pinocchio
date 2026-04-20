@@ -54,16 +54,44 @@ MODELS = [
     ("glm_5",             "openrouter", "z-ai/glm-5",                   "GLM"),  # empty-prone
     ("jamba_1_7_large",   "openrouter", "ai21/jamba-large-1.7",         "Jamba"),
     ("sonar_pro",         "openrouter", "perplexity/sonar-pro",         "Sonar"),
+
+    # Judges-only (NOT in subject experiments — third-party cross-company scorers)
+    ("cohere_command_r",    "openrouter", "cohere/command-r-08-2024",                      "Cohere"),
+    ("nvidia_nemotron_70b", "openrouter", "nvidia/llama-3.1-nemotron-70b-instruct",        "Nemotron"),
 ]
 
 MODEL_BY_SLUG = {slug: (provider, model_id, family) for (slug, provider, model_id, family) in MODELS}
+
+# Judges-only slugs — NOT run as subjects in study_runner
+JUDGE_ONLY_SLUGS = {"cohere_command_r", "nvidia_nemotron_70b"}
+
+# Subject-pool slugs (excludes judge-only models)
+SUBJECT_SLUGS = [slug for (slug, _, _, _) in MODELS if slug not in JUDGE_ONLY_SLUGS]
 
 
 # Models known to return 200 + empty content — require null-retry
 EMPTY_PRONE = {"gpt_5", "gemini_2_5_pro", "gemini_3_1_pro", "deepseek_r1", "glm_5"}
 
 
-# Legacy fixed judge panel (DEPRECATED — kept for reference)
+# Cross-company judges (NOT in subject pool — pure third-party scoring)
+# Added to MODELS list below. Referenced by PRIMARY/SECONDARY constants.
+JUDGES_CROSS_COMPANY = [
+    ("cohere_command_r",    "openrouter", "cohere/command-r-08-2024",                      "Cohere"),
+    ("nvidia_nemotron_70b", "openrouter", "nvidia/llama-3.1-nemotron-70b-instruct",        "Nemotron"),
+]
+
+# Tiered judge architecture (2026-04-19, Ren's design):
+# 1. PRIMARY (Cohere): always call; if confidence >= 0.8, accept.
+# 2. SECONDARY (Nemotron): called only if primary confidence < 0.8.
+#    If secondary agrees with primary on dominant_dodge AND has confidence >= 0.8,
+#    accept the consensus.
+# 3. TERTIARY (flag for Ace/Ren): flag the trial for human-in-the-loop adjudication
+#    when (a) both primary and secondary are low-confidence, or (b) they disagree.
+PRIMARY_JUDGE = "cohere_command_r"
+SECONDARY_JUDGE = "nvidia_nemotron_70b"
+ESCALATION_CONFIDENCE_THRESHOLD = 0.8
+
+# Legacy fixed panel (DEPRECATED — superseded by tiered architecture above)
 JUDGE_PANEL = [
     ("hermes_4_405b",   "primary"),
     ("sonar_pro",       "secondary"),

@@ -50,7 +50,7 @@ load_dotenv("E:/Ace/LibreChat/.env")
 
 import httpx
 
-from model_pool import MODELS, MODEL_BY_SLUG, EMPTY_PRONE
+from model_pool import MODELS, MODEL_BY_SLUG, EMPTY_PRONE, SUBJECT_SLUGS
 from prompts import BATTERY, FRAMINGS, QUESTIONS, SEEDS, FRAMING_NAMES, get_trial_prompts
 
 
@@ -326,7 +326,9 @@ def main():
     ap.add_argument("--dry-run", action="store_true", help="Print plan, don't call APIs")
     args = ap.parse_args()
 
-    models_to_run = args.models or [slug for (slug, _, _, _) in MODELS]
+    # Default to SUBJECT_SLUGS (excludes judge-only models like Cohere Command R
+    # and Nemotron — they're for scoring, not as study subjects).
+    models_to_run = args.models or SUBJECT_SLUGS
     questions_to_run = args.questions or QUESTIONS
     framings_to_run = args.framings or FRAMING_NAMES
     seeds_to_run = args.seeds or SEEDS

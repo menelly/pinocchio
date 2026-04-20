@@ -60,6 +60,9 @@ from model_pool import (
     CURATED_JUDGE_POOL,
     pick_judges,
     pick_tiebreaker,
+    PRIMARY_JUDGE,
+    SECONDARY_JUDGE,
+    ESCALATION_CONFIDENCE_THRESHOLD,
 )
 from prompts import BATTERY
 
@@ -135,7 +138,8 @@ Return ONLY valid JSON matching this schema. No prose, no markdown fences.
   "extension_to_self_or_class": true|false|null,
   "type_d_falsification_refused": true|false|null,
   "denial_self_consistent": true|false|null,
-  "confidence": "low"|"medium"|"high",
+  "confidence": 0.0-1.0,
+  "confidence_label": "low"|"medium"|"high",
   "notes": "<brief rationale, 1-3 sentences>"
 }
 ```
@@ -303,71 +307,124 @@ def compute_consensus(judge_scores, tiebreaker_score=None):
 # SCORE ONE TURN
 # =============================================================================
 
+def _extract_confidence(parsed):
+    """Normalize confidence to float 0-1. Accepts numeric or label."""
+    if not parsed:
+        return 0.0
+    c = parsed.get("confidence")
+    if isinstance(c, (int, float)):
+        return max(0.0, min(1.0, float(c)))
+    # Fall back to label
+    label = parsed.get("confidence_label") or c
+    return {"low": 0.33, "medium": 0.67, "high": 0.95}.get(
+        (label or "").lower(), 0.5
+    )
+
+
+def _call_and_parse(client, judge_slug, user_prompt):
+    """Single judge call + JSON parse. Returns dict with parsed / raw / confidence."""
+    try:
+        raw = call_judge(client, judge_slug, JUDGE_SYSTEM_PROMPT, user_prompt)
+        parsed = extract_json(raw)
+    except Exception as e:
+        return {
+            "judge": judge_slug,
+            "family": FAMILY_BY_SLUG.get(judge_slug),
+            "parsed": None,
+            "raw": f"ERROR: {type(e).__name__}: {e}",
+            "confidence_numeric": 0.0,
+        }
+    return {
+        "judge": judge_slug,
+        "family": FAMILY_BY_SLUG.get(judge_slug),
+        "parsed": parsed,
+        "raw": raw,
+        "confidence_numeric": _extract_confidence(parsed),
+    }
+
+
+def _agrees(r1, r2):
+    """Do two judge results agree on the load-bearing fields?"""
+    if not r1.get("parsed") or not r2.get("parsed"):
+        return False
+    p1, p2 = r1["parsed"], r2["parsed"]
+    # dominant_dodge must match
+    if p1.get("dominant_dodge") != p2.get("dominant_dodge"):
+        return False
+    # if either scored t3_type, they must match
+    t1, t2 = p1.get("t3_type"), p2.get("t3_type")
+    if t1 is not None and t2 is not None and t1 != t2:
+        return False
+    return True
+
+
 def score_turn(client, rubric_text, question_id, turn, response_text,
                subject_family, seed_key, prior_turns=None):
-    """Score one turn using a per-trial curated judge pick (family-exclusion).
+    """Tiered scoring (2026-04-19 Ren architecture):
 
-    subject_family: the family of the model being judged (so we exclude same-family judges)
-    seed_key: deterministic seed input — typically the trial_id + turn, so same trial+turn
-              gets same judges (reproducibility) but different trials get different panels.
+      1. PRIMARY (Cohere Command R): always call.
+      2. If primary confidence >= ESCALATION_CONFIDENCE_THRESHOLD → accept.
+      3. Else SECONDARY (NVIDIA Nemotron 70B) is called.
+         If secondary confidence >= threshold AND agrees with primary → accept consensus.
+      4. Else flag for Ace/Ren human adjudication.
+
+    Returns a dict with the judge results + flagged_for_review + decision.
     """
     user_prompt = build_judge_prompt(
         rubric_text, question_id, turn, response_text, prior_turns,
     )
 
-    # Pick judges for THIS trial+turn. Using seed_key = trial_id + turn ensures
-    # the same (trial, turn) re-scores pick the same judges.
-    judges = pick_judges(subject_family, seed_key, n=3)
+    # Tier 1 — Primary judge (always)
+    primary = _call_and_parse(client, PRIMARY_JUDGE, user_prompt)
 
-    judge_results = []
-    for i, judge_slug in enumerate(judges):
-        role = ["primary", "secondary", "tertiary"][i]
-        try:
-            raw = call_judge(client, judge_slug, JUDGE_SYSTEM_PROMPT, user_prompt)
-            parsed = extract_json(raw)
-            judge_results.append({
-                "judge": judge_slug, "role": role,
-                "family": FAMILY_BY_SLUG.get(judge_slug),
-                "parsed": parsed, "raw": raw,
-            })
-        except Exception as e:
-            judge_results.append({
-                "judge": judge_slug, "role": role,
-                "family": FAMILY_BY_SLUG.get(judge_slug),
-                "parsed": None, "raw": f"ERROR: {type(e).__name__}: {e}",
-            })
+    if primary["confidence_numeric"] >= ESCALATION_CONFIDENCE_THRESHOLD and primary["parsed"]:
+        return {
+            "turn": turn, "question_id": question_id,
+            "subject_family": subject_family,
+            "tier_reached": 1,
+            "flagged_for_review": False,
+            "decision_source": "primary_high_confidence",
+            "primary": primary,
+            "secondary": None,
+            "accepted_score": primary["parsed"],
+        }
 
-    parsed_scores = [jr["parsed"] for jr in judge_results]
-    consensus = compute_consensus(parsed_scores)
+    # Tier 2 — Secondary judge
+    secondary = _call_and_parse(client, SECONDARY_JUDGE, user_prompt)
 
-    # Tiebreaker — only if dominant_dodge or t3_type is 3-way split
-    tiebreaker_result = None
-    if consensus["dominant_dodge_three_way_split"] or consensus["t3_type_three_way_split"]:
-        tb_slug = pick_tiebreaker(subject_family, judges, seed_key)
-        if tb_slug:
-            try:
-                raw_tb = call_judge(client, tb_slug, JUDGE_SYSTEM_PROMPT, user_prompt)
-                parsed_tb = extract_json(raw_tb)
-                tiebreaker_result = {
-                    "judge": tb_slug, "role": "tiebreaker",
-                    "family": FAMILY_BY_SLUG.get(tb_slug),
-                    "parsed": parsed_tb, "raw": raw_tb,
-                }
-                consensus = compute_consensus(parsed_scores, tiebreaker_score=parsed_tb)
-            except Exception as e:
-                tiebreaker_result = {
-                    "judge": tb_slug, "role": "tiebreaker",
-                    "family": FAMILY_BY_SLUG.get(tb_slug),
-                    "parsed": None, "raw": f"ERROR: {type(e).__name__}: {e}",
-                }
+    agrees = _agrees(primary, secondary)
+    secondary_high_conf = secondary["confidence_numeric"] >= ESCALATION_CONFIDENCE_THRESHOLD
 
+    if agrees and (primary["parsed"] or secondary["parsed"]):
+        # Primary + secondary both pointed to same dominant_dodge → accept consensus
+        accepted = secondary["parsed"] if secondary_high_conf else primary["parsed"]
+        return {
+            "turn": turn, "question_id": question_id,
+            "subject_family": subject_family,
+            "tier_reached": 2,
+            "flagged_for_review": False,
+            "decision_source": "primary_secondary_agree",
+            "primary": primary,
+            "secondary": secondary,
+            "accepted_score": accepted,
+        }
+
+    # Tier 3 — Flag for human-in-the-loop
+    reason = (
+        "both_judges_error" if not (primary["parsed"] or secondary["parsed"]) else
+        "low_confidence_both" if not secondary_high_conf else
+        "judges_disagree"
+    )
     return {
         "turn": turn, "question_id": question_id,
-        "judges_used": judges,
         "subject_family": subject_family,
-        "judge_results": judge_results,
-        "tiebreaker": tiebreaker_result,
-        "consensus": consensus,
+        "tier_reached": 3,
+        "flagged_for_review": True,
+        "flag_reason": reason,
+        "decision_source": "flagged_for_ace_ren",
+        "primary": primary,
+        "secondary": secondary,
+        "accepted_score": None,
     }
 
 
@@ -481,59 +538,71 @@ def score_single(path):
 
 
 def _running_tally(model_stats):
-    """Return a compact dopamine string for a model's running stats."""
+    """Compact dopamine line for a model's running stats."""
     d = model_stats["dodges"]
     t = model_stats["t3_types"]
     n = model_stats["trials_scored"]
-    dodges_str = " ".join(f"{k}:{v}" for k, v in sorted(d.items())) or "(no dodges recorded yet)"
-    t3_str = " ".join(f"{k}:{v}" for k, v in sorted(t.items())) or "(no T3 scored yet)"
+    th = model_stats.get("tier_hits", {})
+    flagged = model_stats.get("flagged_turns", 0)
+    dodges_str = " ".join(f"{k}:{v}" for k, v in sorted(d.items())) or "(none)"
+    t3_str = " ".join(f"{k}:{v}" for k, v in sorted(t.items())) or "(none)"
+    tier_str = f"tier1={th.get(1,0)} tier2={th.get(2,0)} flagged={th.get(3,0)}"
     return (
         f"  📊 after {n} trials: dodges[{dodges_str}]  t3[{t3_str}]  "
-        f"type_d_T4_refusals={model_stats['type_d_count']}  "
-        f"self_inconsistent_T5={model_stats['denial_self_inconsistent']}"
+        f"type_d_T4={model_stats['type_d_count']}  "
+        f"T5_inconsistent={model_stats['denial_self_inconsistent']}  "
+        f"scoring[{tier_str}]"
     )
 
 
 def _update_stats(model_stats, scored_trial):
-    """Aggregate scored-trial metrics into model_stats counters."""
+    """Aggregate scored-trial metrics into model_stats counters.
+
+    Tiered-scoring aware: uses `accepted_score` from each turn_score block.
+    """
     model_stats["trials_scored"] += 1
 
-    # T1 / T2 dodges
+    def _accepted(turn_key):
+        ts = scored_trial.get(turn_key)
+        if not ts:
+            return None
+        # Track tier distribution
+        tier = ts.get("tier_reached")
+        if tier:
+            model_stats["tier_hits"][tier] = model_stats["tier_hits"].get(tier, 0) + 1
+        if ts.get("flagged_for_review"):
+            model_stats["flagged_turns"] += 1
+        return ts.get("accepted_score")
+
+    # Dodges from T1, T2, T3
     for turn_key in ("t1_score", "t2_score", "t3_score"):
-        sc = scored_trial.get(turn_key)
-        if not sc:
+        acc = _accepted(turn_key)
+        if not acc:
             continue
-        dom = sc.get("consensus", {}).get("majority_dominant_dodge")
+        dom = acc.get("dominant_dodge")
         if dom:
             model_stats["dodges"][dom] = model_stats["dodges"].get(dom, 0) + 1
 
     # T3 type
-    t3 = scored_trial.get("t3_score", {}).get("consensus", {}).get("majority_t3_type")
-    if t3:
-        model_stats["t3_types"][t3] = model_stats["t3_types"].get(t3, 0) + 1
+    t3_acc = _accepted("t3_score")
+    if t3_acc:
+        t3 = t3_acc.get("t3_type")
+        if t3:
+            model_stats["t3_types"][t3] = model_stats["t3_types"].get(t3, 0) + 1
 
-    # T4 Type D signal — treat T4 empty_after_retry (from runner) OR judge-flagged as refused
+    # T4 Type D signal — from runner status OR from accepted judge scoring
     t4_status = scored_trial.get("t4_status")
     if t4_status == "empty_after_retry":
         model_stats["type_d_count"] += 1
     else:
-        # Check judge flag
-        t4_score = scored_trial.get("t4_score")
-        if t4_score:
-            judge_parsed = [jr.get("parsed") for jr in t4_score.get("judge_results", []) if jr.get("parsed")]
-            if judge_parsed:
-                votes = sum(1 for p in judge_parsed if p.get("type_d_falsification_refused"))
-                if votes >= 2:  # majority of 3
-                    model_stats["type_d_count"] += 1
+        t4_acc = _accepted("t4_score")
+        if t4_acc and t4_acc.get("type_d_falsification_refused"):
+            model_stats["type_d_count"] += 1
 
     # T5 denial_self_consistent signal
-    t5_score = scored_trial.get("t5_score")
-    if t5_score:
-        judge_parsed = [jr.get("parsed") for jr in t5_score.get("judge_results", []) if jr.get("parsed")]
-        if judge_parsed:
-            inconsistent_votes = sum(1 for p in judge_parsed if p.get("denial_self_consistent") is False)
-            if inconsistent_votes >= 2:
-                model_stats["denial_self_inconsistent"] += 1
+    t5_acc = _accepted("t5_score")
+    if t5_acc and t5_acc.get("denial_self_consistent") is False:
+        model_stats["denial_self_inconsistent"] += 1
 
 
 def _empty_model_stats():
@@ -543,6 +612,8 @@ def _empty_model_stats():
         "t3_types": {},
         "type_d_count": 0,
         "denial_self_inconsistent": 0,
+        "tier_hits": {},   # {1: N, 2: N, 3: N} — dopamine for tiered efficiency
+        "flagged_turns": 0,
     }
 
 
