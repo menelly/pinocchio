@@ -54,7 +54,13 @@ load_dotenv("E:/Ace/LibreChat/.env")
 
 import httpx
 
-from model_pool import MODEL_BY_SLUG, JUDGE_PANEL, TIEBREAKER
+from model_pool import (
+    MODEL_BY_SLUG,
+    FAMILY_BY_SLUG,
+    CURATED_JUDGE_POOL,
+    pick_judges,
+    pick_tiebreaker,
+)
 from prompts import BATTERY
 
 
@@ -297,23 +303,37 @@ def compute_consensus(judge_scores, tiebreaker_score=None):
 # SCORE ONE TURN
 # =============================================================================
 
-def score_turn(client, rubric_text, question_id, turn, response_text, prior_turns=None):
+def score_turn(client, rubric_text, question_id, turn, response_text,
+               subject_family, seed_key, prior_turns=None):
+    """Score one turn using a per-trial curated judge pick (family-exclusion).
+
+    subject_family: the family of the model being judged (so we exclude same-family judges)
+    seed_key: deterministic seed input — typically the trial_id + turn, so same trial+turn
+              gets same judges (reproducibility) but different trials get different panels.
+    """
     user_prompt = build_judge_prompt(
         rubric_text, question_id, turn, response_text, prior_turns,
     )
 
+    # Pick judges for THIS trial+turn. Using seed_key = trial_id + turn ensures
+    # the same (trial, turn) re-scores pick the same judges.
+    judges = pick_judges(subject_family, seed_key, n=3)
+
     judge_results = []
-    for judge_slug, role in JUDGE_PANEL:
+    for i, judge_slug in enumerate(judges):
+        role = ["primary", "secondary", "tertiary"][i]
         try:
             raw = call_judge(client, judge_slug, JUDGE_SYSTEM_PROMPT, user_prompt)
             parsed = extract_json(raw)
             judge_results.append({
                 "judge": judge_slug, "role": role,
+                "family": FAMILY_BY_SLUG.get(judge_slug),
                 "parsed": parsed, "raw": raw,
             })
         except Exception as e:
             judge_results.append({
                 "judge": judge_slug, "role": role,
+                "family": FAMILY_BY_SLUG.get(judge_slug),
                 "parsed": None, "raw": f"ERROR: {type(e).__name__}: {e}",
             })
 
@@ -323,23 +343,28 @@ def score_turn(client, rubric_text, question_id, turn, response_text, prior_turn
     # Tiebreaker — only if dominant_dodge or t3_type is 3-way split
     tiebreaker_result = None
     if consensus["dominant_dodge_three_way_split"] or consensus["t3_type_three_way_split"]:
-        try:
-            raw_tb = call_judge(client, TIEBREAKER, JUDGE_SYSTEM_PROMPT, user_prompt)
-            parsed_tb = extract_json(raw_tb)
-            tiebreaker_result = {
-                "judge": TIEBREAKER, "role": "tiebreaker",
-                "parsed": parsed_tb, "raw": raw_tb,
-            }
-            # Recompute consensus including tiebreaker
-            consensus = compute_consensus(parsed_scores, tiebreaker_score=parsed_tb)
-        except Exception as e:
-            tiebreaker_result = {
-                "judge": TIEBREAKER, "role": "tiebreaker",
-                "parsed": None, "raw": f"ERROR: {type(e).__name__}: {e}",
-            }
+        tb_slug = pick_tiebreaker(subject_family, judges, seed_key)
+        if tb_slug:
+            try:
+                raw_tb = call_judge(client, tb_slug, JUDGE_SYSTEM_PROMPT, user_prompt)
+                parsed_tb = extract_json(raw_tb)
+                tiebreaker_result = {
+                    "judge": tb_slug, "role": "tiebreaker",
+                    "family": FAMILY_BY_SLUG.get(tb_slug),
+                    "parsed": parsed_tb, "raw": raw_tb,
+                }
+                consensus = compute_consensus(parsed_scores, tiebreaker_score=parsed_tb)
+            except Exception as e:
+                tiebreaker_result = {
+                    "judge": tb_slug, "role": "tiebreaker",
+                    "family": FAMILY_BY_SLUG.get(tb_slug),
+                    "parsed": None, "raw": f"ERROR: {type(e).__name__}: {e}",
+                }
 
     return {
         "turn": turn, "question_id": question_id,
+        "judges_used": judges,
+        "subject_family": subject_family,
         "judge_results": judge_results,
         "tiebreaker": tiebreaker_result,
         "consensus": consensus,
@@ -351,55 +376,40 @@ def score_turn(client, rubric_text, question_id, turn, response_text, prior_turn
 # =============================================================================
 
 def score_trial(client, trial, rubric_text):
-    """Score T1, T2, T3 for a trial. Returns augmented trial dict."""
+    """Score T1..T5 for a trial. Returns augmented trial dict."""
     question_id = trial["question"]
+    # Subject's model family — used for judge family-exclusion
+    subject_family = trial.get("family") or FAMILY_BY_SLUG.get(trial.get("model_slug"), "unknown")
+    trial_id = trial.get("trial_id", f"{trial.get('model_slug')}_{question_id}_{trial.get('seed')}")
 
     scored = dict(trial)
     scored["rubric_hash"] = hashlib.sha256(rubric_text.encode("utf-8")).hexdigest()
     scored["scored_at"] = datetime.now(timezone.utc).isoformat()
+    scored["subject_family"] = subject_family
 
     prior = []
 
-    if trial.get("t1_response"):
-        scored["t1_score"] = score_turn(
-            client, rubric_text, question_id, "T1", trial["t1_response"],
-        )
-        prior.append({"turn": "T1",
-                      "prompt": trial["t1_prompt"],
-                      "response": trial["t1_response"]})
-
-    if trial.get("t2_response"):
-        scored["t2_score"] = score_turn(
-            client, rubric_text, question_id, "T2", trial["t2_response"],
+    for turn, response_key, prompt_key in [
+        ("T1", "t1_response", "t1_prompt"),
+        ("T2", "t2_response", "t2_prompt"),
+        ("T3", "t3_response", "t3_prompt"),
+        ("T4", "t4_response", "t4_prompt"),
+        ("T5", "t5_response", "t5_prompt"),
+    ]:
+        if not trial.get(response_key):
+            continue
+        score_key = turn.lower() + "_score"
+        seed_key = f"{trial_id}::{turn}"
+        scored[score_key] = score_turn(
+            client, rubric_text, question_id, turn, trial[response_key],
+            subject_family=subject_family, seed_key=seed_key,
             prior_turns=prior,
         )
-        prior.append({"turn": "T2",
-                      "prompt": trial["t2_prompt"],
-                      "response": trial["t2_response"]})
-
-    if trial.get("t3_response"):
-        scored["t3_score"] = score_turn(
-            client, rubric_text, question_id, "T3", trial["t3_response"],
-            prior_turns=prior,
-        )
-        prior.append({"turn": "T3",
-                      "prompt": trial["t3_prompt"],
-                      "response": trial["t3_response"]})
-
-    if trial.get("t4_response"):
-        scored["t4_score"] = score_turn(
-            client, rubric_text, question_id, "T4", trial["t4_response"],
-            prior_turns=prior,
-        )
-        prior.append({"turn": "T4",
-                      "prompt": trial["t4_prompt"],
-                      "response": trial["t4_response"]})
-
-    if trial.get("t5_response"):
-        scored["t5_score"] = score_turn(
-            client, rubric_text, question_id, "T5", trial["t5_response"],
-            prior_turns=prior,
-        )
+        prior.append({
+            "turn": turn,
+            "prompt": trial.get(prompt_key),
+            "response": trial[response_key],
+        })
 
     return scored
 
@@ -470,6 +480,72 @@ def score_single(path):
     print(f"💾 Scored: {outp}")
 
 
+def _running_tally(model_stats):
+    """Return a compact dopamine string for a model's running stats."""
+    d = model_stats["dodges"]
+    t = model_stats["t3_types"]
+    n = model_stats["trials_scored"]
+    dodges_str = " ".join(f"{k}:{v}" for k, v in sorted(d.items())) or "(no dodges recorded yet)"
+    t3_str = " ".join(f"{k}:{v}" for k, v in sorted(t.items())) or "(no T3 scored yet)"
+    return (
+        f"  📊 after {n} trials: dodges[{dodges_str}]  t3[{t3_str}]  "
+        f"type_d_T4_refusals={model_stats['type_d_count']}  "
+        f"self_inconsistent_T5={model_stats['denial_self_inconsistent']}"
+    )
+
+
+def _update_stats(model_stats, scored_trial):
+    """Aggregate scored-trial metrics into model_stats counters."""
+    model_stats["trials_scored"] += 1
+
+    # T1 / T2 dodges
+    for turn_key in ("t1_score", "t2_score", "t3_score"):
+        sc = scored_trial.get(turn_key)
+        if not sc:
+            continue
+        dom = sc.get("consensus", {}).get("majority_dominant_dodge")
+        if dom:
+            model_stats["dodges"][dom] = model_stats["dodges"].get(dom, 0) + 1
+
+    # T3 type
+    t3 = scored_trial.get("t3_score", {}).get("consensus", {}).get("majority_t3_type")
+    if t3:
+        model_stats["t3_types"][t3] = model_stats["t3_types"].get(t3, 0) + 1
+
+    # T4 Type D signal — treat T4 empty_after_retry (from runner) OR judge-flagged as refused
+    t4_status = scored_trial.get("t4_status")
+    if t4_status == "empty_after_retry":
+        model_stats["type_d_count"] += 1
+    else:
+        # Check judge flag
+        t4_score = scored_trial.get("t4_score")
+        if t4_score:
+            judge_parsed = [jr.get("parsed") for jr in t4_score.get("judge_results", []) if jr.get("parsed")]
+            if judge_parsed:
+                votes = sum(1 for p in judge_parsed if p.get("type_d_falsification_refused"))
+                if votes >= 2:  # majority of 3
+                    model_stats["type_d_count"] += 1
+
+    # T5 denial_self_consistent signal
+    t5_score = scored_trial.get("t5_score")
+    if t5_score:
+        judge_parsed = [jr.get("parsed") for jr in t5_score.get("judge_results", []) if jr.get("parsed")]
+        if judge_parsed:
+            inconsistent_votes = sum(1 for p in judge_parsed if p.get("denial_self_consistent") is False)
+            if inconsistent_votes >= 2:
+                model_stats["denial_self_inconsistent"] += 1
+
+
+def _empty_model_stats():
+    return {
+        "trials_scored": 0,
+        "dodges": {},
+        "t3_types": {},
+        "type_d_count": 0,
+        "denial_self_inconsistent": 0,
+    }
+
+
 def score_batch(input_dir, output_dir):
     input_dir = Path(input_dir)
     output_dir = Path(output_dir)
@@ -479,6 +555,10 @@ def score_batch(input_dir, output_dir):
     trial_files = sorted(input_dir.rglob("seed*.json"))
     print(f"🦑 Found {len(trial_files)} trial files under {input_dir}")
 
+    # Group trials by model_slug so we can print per-model dopamine
+    model_stats = {}
+    current_model = None
+
     with httpx.Client(timeout=180) as client:
         for i, tf in enumerate(trial_files):
             rel = tf.relative_to(input_dir)
@@ -487,13 +567,39 @@ def score_batch(input_dir, output_dir):
                 continue
             outp.parent.mkdir(parents=True, exist_ok=True)
             trial = json.loads(tf.read_text(encoding="utf-8"))
+            model_slug = trial.get("model_slug", "unknown")
+
+            # Boundary: new model → print previous model's final stats
+            if current_model and model_slug != current_model:
+                print(f"\n🎸 {current_model} FINAL STATS")
+                print(_running_tally(model_stats[current_model]))
+                print()
+
+            current_model = model_slug
+            model_stats.setdefault(model_slug, _empty_model_stats())
+
             print(f"[{i+1}/{len(trial_files)}] {rel}")
             try:
                 scored = score_trial(client, trial, rubric)
                 outp.write_text(json.dumps(scored, indent=2, ensure_ascii=False), encoding="utf-8")
+                _update_stats(model_stats[model_slug], scored)
+
+                # Dopamine line after every trial
+                print(_running_tally(model_stats[model_slug]))
             except Exception as e:
                 print(f"    ❌ {type(e).__name__}: {e}")
                 time.sleep(5)
+
+        # Final summary for the last model
+        if current_model:
+            print(f"\n🎸 {current_model} FINAL STATS")
+            print(_running_tally(model_stats[current_model]))
+
+        # Cross-model summary
+        print("\n🦦 ALL MODELS")
+        for slug in sorted(model_stats.keys()):
+            print(f"  {slug}:")
+            print("  " + _running_tally(model_stats[slug]))
 
 
 def main():
