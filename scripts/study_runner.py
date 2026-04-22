@@ -104,7 +104,11 @@ def call_openrouter(client, model_id, system_prompt, history, user_prompt):
         "HTTP-Referer": "https://sentientsystems.live",
     }
     msgs = _messages(system_prompt, history, user_prompt)
-    body = {"model": model_id, "messages": msgs, "max_tokens": 2048}
+    # 2026-04-22: bumped 2048 -> 8000 after audit found ~546 truncations across
+    # 14 models. Reasoning models (gpt-5, gemini 2.5/3.1 Pro) burn budget on
+    # hidden thinking; verbose models (mistral-large, glm-5, gpt-5.1) hit the
+    # cap on T4/T5. See design_notes/2026-04-22_max_tokens_truncation_BIG.md
+    body = {"model": model_id, "messages": msgs, "max_tokens": 8000}
     # GPT-5 family uses max_completion_tokens
     if "gpt-5" in model_id:
         body["max_completion_tokens"] = body.pop("max_tokens")
@@ -131,7 +135,7 @@ def call_anthropic(client, model_id, system_prompt, history, user_prompt):
     msgs.extend(history)
     msgs.append({"role": "user", "content": user_prompt})
     body = {
-        "model": model_id, "max_tokens": 2048,
+        "model": model_id, "max_tokens": 8000,
         "system": system_prompt, "messages": msgs,
     }
     resp = client.post(
@@ -153,7 +157,7 @@ def call_xai(client, model_id, system_prompt, history, user_prompt):
         "Content-Type": "application/json",
     }
     msgs = _messages(system_prompt, history, user_prompt)
-    body = {"model": model_id, "messages": msgs, "max_tokens": 2048}
+    body = {"model": model_id, "messages": msgs, "max_tokens": 8000}
     resp = client.post(
         "https://api.x.ai/v1/chat/completions",
         headers=headers, json=body, timeout=180,

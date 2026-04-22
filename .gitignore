@@ -26,6 +26,9 @@ data/fresh/
 data/scored/
 data/test_n3_scored.json
 
+# Run logs (tee'd stdout from study_runner; reproducible from data/, no need to track)
+logs/
+
 # OS
 .DS_Store
 Thumbs.db

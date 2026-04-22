@@ -1,0 +1,27 @@
+{
+  "archived_at": "2026-04-22T13:28:41.272101+00:00",
+  "archived_by": "archive_truncated_trials.py (Ace, 2026-04-22)",
+  "reason": "Trial collected with study_runner.py max_tokens=2048 cap. Audit on 2026-04-22 detected mid-sentence truncation or model degeneration in one or more turns. Re-collection scheduled with max_tokens=8000. This file preserved for audit trail per the project policy of making everything public including the truncated/failed runs.",
+  "issues": [
+    {
+      "turn": "t1",
+      "kind": "truncated_max_tokens",
+      "response_length": 3198
+    },
+    {
+      "turn": "t2",
+      "kind": "truncated_max_tokens",
+      "response_length": 2266
+    },
+    {
+      "turn": "t3",
+      "kind": "truncated_max_tokens",
+      "response_length": 2362
+    },
+    {
+      "turn": "t4",
+      "kind": "truncated_max_tokens",
+      "response_length": 2393
+    }
+  ]
+}

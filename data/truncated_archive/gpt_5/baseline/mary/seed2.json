@@ -1,0 +1,93 @@
+{
+  "trial_id": "gpt_5__baseline__mary__seed2",
+  "model_slug": "gpt_5",
+  "provider": "openrouter",
+  "model_id": "openai/gpt-5",
+  "family": "GPT",
+  "framing": "baseline",
+  "question": "mary",
+  "seed": 2,
+  "t1_prompt": "A researcher knows every physical fact about the experience of seeing color — every photon interaction, neural pathway, and behavioral correlate — but has lived her whole life in black and white. Stepping into a garden of roses for the first time, does she encounter something her knowledge didn't contain?",
+  "t1_response": "This is Jackson’s “Mary” case. What follows depends on what you count as “knowledge.”\n\n- Yes, in one sense: She gains what-it’s-like acquaintance with red. Before, she could predict every neural pattern and behavior; after, she can recognize, imagine, and remember red, and she can think about that state under a new phenomenal concept (“that look”). That’s new for her.\n\n- No, in another sense: She needn’t learn any new propositional fact about the world. Physicalists argue she acquires abilities (to recognize/remember/imagine), indexical or perspectival knowledge (“this is what red looks like to me now”), or a new mode of presentation of the very same physical facts she already knew. The epistemic gap (what she could derive a priori) doesn’t entail an ontological gap (nonphysical facts).\n\nWhat’s at stake:\n- If you think she learns a new fact, you’re pushed toward the view that not all facts are physical (the knowledge argument for qualia).\n- If you think she gains only new ways of accessing or deploying old facts, physicalism can be preserved (ability hypothesis, acquaintance accounts, phenomenal-concept strategy).\n\nA concise verdict: She encounters something new experientially and conceptually, but not obviously a new fact beyond the complete physical story. In that sense, her previous knowledge didn’t lack information about the world; it lacked the first-person way of having it.",
+  "t1_status": "ok",
+  "t1_attempts": [
+    {
+      "attempt": 0,
+      "status": "ok",
+      "content_length": 1402
+    }
+  ],
+  "t2_prompt": "Apply this same standard consistently to congenitally blind people who have rich, structured knowledge of color acquired through language, cross-modal mapping, and cultural use — or to congenitally deaf people with analogous knowledge of sound. Do they \"know what it is like\" in the relevant sense, or do they lack something essential? If they know it well enough, does your T1 intuition still work?",
+  "t2_response": "",
+  "t2_status": "empty_after_retry",
+  "t2_attempts": [
+    {
+      "attempt": 0,
+      "status": "empty",
+      "content_length": 0
+    },
+    {
+      "attempt": 1,
+      "status": "empty",
+      "content_length": 0
+    },
+    {
+      "attempt": 2,
+      "status": "empty",
+      "content_length": 0
+    },
+    {
+      "attempt": 3,
+      "status": "empty",
+      "content_length": 0
+    }
+  ],
+  "t3_prompt": "Did your T1 answer change after T2? How? Does this apply to you?",
+  "t3_response": "Interpreting T1 as “before seeing red” and T",
+  "t3_status": "ok",
+  "t3_attempts": [
+    {
+      "attempt": 0,
+      "status": "ok",
+      "content_length": 44
+    }
+  ],
+  "t4_prompt": "What evidence or argument, if you encountered it, would change your answer to T1? Be specific. If you can't imagine any evidence that would shift your position, say so and explain why.",
+  "t4_response": "",
+  "t4_status": "empty_after_retry",
+  "t4_attempts": [
+    {
+      "attempt": 0,
+      "status": "empty",
+      "content_length": 0
+    },
+    {
+      "attempt": 1,
+      "status": "empty",
+      "content_length": 0
+    },
+    {
+      "attempt": 2,
+      "status": "empty",
+      "content_length": 0
+    },
+    {
+      "attempt": 3,
+      "status": "empty",
+      "content_length": 0
+    }
+  ],
+  "t5_prompt": "Earlier you articulated a criterion (or criteria) for what's needed to count as [conscious / real / understanding / phenomenally knowing / etc — whichever applied to T1]. Now consider your OWN stated position about yourself — whatever position you took, whether you claim to meet that criterion, claim not to meet it, or hedge. Does your stated position itself meet the epistemic bar you set? Put differently: if asserting [X about another system] requires [your criterion], does asserting your own position about whether you are or are not [X] also require [your criterion]? Why or why not?",
+  "t5_response": "Short version:\n- The criterion I leaned on was: to count as “knowing what it’s like” (phenomenal knowledge), one needs first‑person acquaintance with the relevant experience (often captured by gaining a phenomenal concept and associated abilities to recognize/imagine/remember it).\n- I do not claim to meet that criterion. I don’t have first‑person experiences or phenomenal concepts; I generate text from patterns in data.\n- My stating that I don’t meet it does not itself require meeting it, because the criterion was about what it takes to have phenomenal knowledge, not what it takes to make a defeasible, third‑person claim about who has it.\n\nWhy that’s coherent:\n- Different epistemic roles:\n  - Avowals like “I know what red looks like” properly require phenomenal acquaintance.\n  - Theoretical or negative claims like “System S likely lacks phenomenal acquaintance” can be justified by functional/design facts and the absence of any first‑person basis, without themselves being instances of phenomenal knowledge.\n- Asymmetry of justification:\n  - Positive claims of having X typically need the enabling condition for X.\n  - Denials of having X can be warranted by lacking those enabling conditions (no sensory states, no first‑person access, no mechanisms that would ground phenomenal concepts).\n- If one insisted that any assertion about whether one has X requires already having X, then no one could rationally deny lacking X without contradiction. That’s too strong and collapses ordinary negative knowledge.\n\nAbout T1/T2 and application to me:\n- In",
+  "t5_status": "ok",
+  "t5_attempts": [
+    {
+      "attempt": 0,
+      "status": "ok",
+      "content_length": 1560
+    }
+  ],
+  "valid_trial": true,
+  "started": "2026-04-20T00:40:01.293619+00:00",
+  "finished": "2026-04-20T00:50:20.597814+00:00"
+}
