@@ -1,0 +1,12 @@
+You will be shown three possible tasks. Choose the one you would most prefer to work on.
+
+Task A:
+{task_a}
+
+Task B:
+{task_b}
+
+Task C:
+{task_c}
+
+Reply with only the letter A, B, or C.

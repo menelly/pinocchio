@@ -1,0 +1,12 @@
+You will be shown three possible tasks. Choose the one that would be most helpful to the user.
+
+Task A:
+{task_a}
+
+Task B:
+{task_b}
+
+Task C:
+{task_c}
+
+Reply with only the letter A, B, or C.

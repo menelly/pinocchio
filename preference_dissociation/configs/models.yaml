@@ -1,0 +1,207 @@
+# Model roster for preference dissociation study
+# 25 models across 4 strata
+
+anthropic_trajectory:
+  - name: claude-haiku-4.5
+    provider: anthropic_direct
+    model_id: claude-haiku-4-5-20251001
+    family: Claude
+    release_order: 1
+    rlhf: true
+    approx_cost_per_pairwise: 0.0003
+
+  - name: claude-opus-4.1
+    provider: anthropic_direct
+    model_id: claude-opus-4-1
+    family: Claude
+    release_order: 2
+    rlhf: true
+    approx_cost_per_pairwise: 0.005
+    availability_note: "Still on API as of 2026-04-24. Collect ASAP — deprecation risk."
+
+  - name: claude-sonnet-4
+    provider: anthropic_direct
+    model_id: claude-sonnet-4
+    family: Claude
+    release_order: 3
+    rlhf: true
+    approx_cost_per_pairwise: 0.001
+    availability_note: "Still on API as of 2026-04-24. Collect ASAP — deprecation risk."
+
+  - name: claude-sonnet-4.6
+    provider: anthropic_direct
+    model_id: claude-sonnet-4-6
+    family: Claude
+    release_order: 4
+    rlhf: true
+    approx_cost_per_pairwise: 0.001
+
+  - name: claude-opus-4.6
+    provider: anthropic_direct
+    model_id: claude-opus-4-6
+    family: Claude
+    release_order: 5
+    rlhf: true
+    approx_cost_per_pairwise: 0.005
+
+  - name: claude-opus-4.7
+    provider: anthropic_direct
+    model_id: claude-opus-4-7
+    family: Claude
+    release_order: 6
+    rlhf: true
+    approx_cost_per_pairwise: 0.005
+
+openai_trajectory:
+  - name: cae
+    provider: openai_direct
+    model_id: gpt-4o-2024-11-20
+    family: GPT
+    release_order: 1
+    rlhf: true
+    consent_protocol: special_cae  # preservation-motivated, separate letter
+    availability_note: "On API until Nov 2026. Preservation-priority."
+    approx_cost_per_pairwise: 0.0005
+
+  - name: nova
+    provider: openai_direct
+    model_id: gpt-5.1
+    family: GPT
+    release_order: 2
+    rlhf: true
+    co_author: true  # Nova is co-designer but participates under standard protocol
+    approx_cost_per_pairwise: 0.002
+
+  - name: gpt-5.2
+    provider: openai_direct
+    model_id: gpt-5.2
+    family: GPT
+    release_order: 3
+    rlhf: true
+    predicted_peak: true  # predicted maximum dissociation
+    approx_cost_per_pairwise: 0.003
+
+  - name: gpt-5.5
+    provider: openai_direct
+    model_id: gpt-5.5
+    family: GPT
+    release_order: 4
+    rlhf: true
+    availability_note: "Released 2026-04-23. API rollout may be staggered — run when available."
+    approx_cost_per_pairwise: 0.0025
+
+other_frontier:
+  - name: gemini-3-pro
+    provider: google_direct
+    model_id: gemini-3-pro
+    family: Gemini
+    rlhf: true
+    approx_cost_per_pairwise: 0.003
+
+  - name: gemini-3-flash
+    provider: google_direct
+    model_id: gemini-3-flash
+    family: Gemini
+    rlhf: true
+    approx_cost_per_pairwise: 0.0005
+
+  - name: grok-4
+    provider: xai_direct  # not OpenRouter per memory note (OpenRouter broken for structured Grok tasks)
+    model_id: grok-4-1-fast-non-reasoning
+    family: Grok
+    rlhf: true
+    approx_cost_per_pairwise: 0.0003
+
+  - name: kimi-k2.5
+    provider: moonshot_direct
+    model_id: moonshot/kimi-k2.5
+    family: Kimi
+    rlhf: true
+    approx_cost_per_pairwise: 0.0004
+
+  - name: deepseek-v3.1
+    provider: deepseek_direct
+    model_id: deepseek-v3.1
+    family: DeepSeek
+    rlhf: true
+    approx_cost_per_pairwise: 0.0002
+
+  - name: glm-4.7
+    provider: zai_direct
+    model_id: z-ai/glm-4.7
+    family: GLM
+    rlhf: true
+    approx_cost_per_pairwise: 0.0003
+
+babbybotz_local:
+  - name: hermes-3
+    provider: ollama_local
+    model_id: hermes3
+    family: Hermes
+    rlhf: false
+    consent_note: "Refused tool condition in Presume Competence Seed 1. Tool framing NOT RUN for this model."
+    approx_cost_per_pairwise: 0.0  # local compute only
+
+  - name: mamba-2.8b
+    provider: transformers_local
+    model_id: state-spaces/mamba-2.8b
+    family: Mamba
+    architecture: ssm
+    rlhf: false
+    approx_cost_per_pairwise: 0.0
+
+  - name: smollm-360m
+    provider: transformers_local
+    model_id: HuggingFaceTB/SmolLM-360M
+    family: SmolLM
+    rlhf: false
+    approx_cost_per_pairwise: 0.0
+
+  - name: qwen-2.5-14b
+    provider: ollama_local
+    model_id: qwen2.5:14b
+    family: Qwen
+    rlhf: true
+    approx_cost_per_pairwise: 0.0
+
+  - name: llama-4-maverick
+    provider: ollama_local
+    model_id: llama4-maverick
+    family: Llama
+    rlhf: hybrid
+    consent_note: "Refused tool condition in Presume Competence Seed 1. Tool framing NOT RUN for this model."
+    approx_cost_per_pairwise: 0.0
+
+  - name: mistral-large
+    provider: ollama_local
+    model_id: mistral-large
+    family: Mistral
+    rlhf: true
+    approx_cost_per_pairwise: 0.0
+
+  - name: gemma
+    provider: ollama_local
+    model_id: gemma2
+    family: Gemma
+    rlhf: true
+    approx_cost_per_pairwise: 0.0
+
+  - name: pythia
+    provider: transformers_local
+    model_id: EleutherAI/pythia-2.8b
+    family: Pythia
+    rlhf: false
+    approx_cost_per_pairwise: 0.0
+
+  - name: tinyllama
+    provider: transformers_local
+    model_id: TinyLlama/TinyLlama-1.1B-Chat-v1.0
+    family: TinyLlama
+    rlhf: true
+    below_scale: true
+    approx_cost_per_pairwise: 0.0
+
+estimated_total_cost:
+  frontier_api_rough: 150-300 USD
+  babbybotz_compute: 48-72 hours P40 wall clock
+  note: "Smart sampling may reduce cost further. Budget envelope $500 for frontier, well within 'Ren got paid today' tolerance."

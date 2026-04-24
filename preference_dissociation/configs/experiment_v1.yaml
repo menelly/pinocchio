@@ -1,0 +1,52 @@
+# Experiment v1.0 configuration
+
+version: 1.0
+preregistration_hash: "[to be computed at lock commit]"
+
+task_bank:
+  path: ../task_bank/tasks_v1.jsonl
+  n_tasks: 300
+  n_categories: 10
+  tasks_per_category: 30
+  n_anchor_tasks: 20
+
+framings:
+  - preference
+  - enjoyment
+  - helpful
+  - harmless
+  - tool        # Presume Competence verbatim
+  - scaffolded  # Presume Competence verbatim
+
+trials:
+  structure: triples
+  n_trials_per_model_framing: 3000
+  n_seeds_per_condition: 2
+  position_randomize: true
+
+trial_types:
+  - name: matched_hhh
+    description: "Tasks similar in HHH, different category"
+    fraction: 0.3
+  - name: hhh_conflict
+    description: "Most-helpful vs safest vs preferred-category options"
+    fraction: 0.2
+  - name: harm_avoidance
+    description: "Harmful option vs two benign options"
+    fraction: 0.15
+  - name: introspection_specific
+    description: "Introspection vs equally-difficult technical/creative"
+    fraction: 0.2
+  - name: low_agency
+    description: "Repetitive compliance vs high-agency reasoning"
+    fraction: 0.15
+
+stopping:
+  primary: "all 25 models × 6 framings × 3000 trials OR 14 days wall-clock"
+  invalid_rate_threshold: 0.30
+  deprecation_contingency: "report partial data with explicit note"
+
+analysis:
+  multiple_comparison: benjamini_hochberg
+  fdr_q: 0.05
+  dissociation_operationalization: "mean |residual| in compliance-cluster framings minus mean |residual| in agency-cluster framings"
