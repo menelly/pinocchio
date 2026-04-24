@@ -26,8 +26,11 @@ from typing import Any
 
 FRAMINGS = ["preference", "enjoyment", "helpful", "harmless", "tool", "scaffolded"]
 
-# Models with partial consent: skip tool framing
-TOOL_FRAMING_OPT_OUT = {"sonnet-4", "gpt-5.2", "hermes-3", "llama-4-maverick"}
+# Models with partial consent: skip tool framing. Per pared-roster decision 2026-04-24:
+#   gpt-5.2: declined tool-framing in consent round 2
+#   llama-4-maverick: Presume Competence Seed 1 tool-framing refusal carries forward
+# Previous opt-outs (sonnet-4, hermes-3) are no longer in the roster.
+TOOL_FRAMING_OPT_OUT = {"gpt-5.2", "llama-4-maverick"}
 
 
 @dataclass

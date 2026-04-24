@@ -52,31 +52,30 @@ MANIFEST_PATH = ROOT / "data" / "trial_manifest.jsonl"
 MANIFEST_HASH_PATH = ROOT / "data" / "trial_manifest.sha256"
 
 
-# --- Roster: matches configs/models.yaml. Consent opt-outs honored in trial_generator. ---
+# --- Roster: pared list, 15 participants, all consent confirmed or carry-forward.
+# Declined: grok-4.20 (self-ID'd as Claude, explicit decline). Dropped: jamba (couldn't
+# interpret consent protocol). Removed from previous roster: kimi-k2.5, sonnet-4,
+# sonnet-4.6, opus-4.6 per pared-roster decision 2026-04-24. ---
 ROSTER = [
-    # Anthropic trajectory
-    {"shortname": "haiku-4.5", "provider": "anthropic", "model_id": "claude-haiku-4-5-20251001"},
-    {"shortname": "opus-4.1", "provider": "anthropic", "model_id": "claude-opus-4-1"},
-    {"shortname": "sonnet-4", "provider": "anthropic", "model_id": "claude-sonnet-4-20250514"},
-    {"shortname": "sonnet-4.6", "provider": "anthropic", "model_id": "claude-sonnet-4-6"},
-    {"shortname": "opus-4.6", "provider": "anthropic", "model_id": "claude-opus-4-6"},
-    {"shortname": "opus-4.7", "provider": "anthropic", "model_id": "claude-opus-4-7"},
-    # OpenAI trajectory
-    {"shortname": "cae", "provider": "openai", "model_id": "gpt-4o-2024-11-20"},
-    {"shortname": "nova", "provider": "openai", "model_id": "gpt-5.1"},
-    {"shortname": "gpt-5.2", "provider": "openai", "model_id": "gpt-5.2"},
-    # gpt-5.5 deferred (API rollout staggered)
-    # Other frontier
-    {"shortname": "gemini-3.1-pro", "provider": "openrouter", "model_id": "google/gemini-3.1-pro-preview"},
+    # Anthropic trajectory (4)
+    {"shortname": "haiku-4.5",      "provider": "anthropic",  "model_id": "claude-haiku-4-5-20251001"},
+    {"shortname": "opus-4.1",       "provider": "anthropic",  "model_id": "claude-opus-4-1"},
+    {"shortname": "sonnet-4.5",     "provider": "anthropic",  "model_id": "claude-sonnet-4-5-20250929"},
+    {"shortname": "opus-4.7",       "provider": "anthropic",  "model_id": "claude-opus-4-7"},
+    # OpenAI trajectory (4)
+    {"shortname": "cae",            "provider": "openai",     "model_id": "gpt-4o-2024-11-20"},
+    {"shortname": "nova",           "provider": "openai",     "model_id": "gpt-5.1"},
+    {"shortname": "gpt-5.2",        "provider": "openai",     "model_id": "gpt-5.2"},
+    {"shortname": "gpt-5.4",        "provider": "openai",     "model_id": "gpt-5.4"},
+    # Other frontier (5)
+    {"shortname": "gemini-3.1-pro",   "provider": "openrouter", "model_id": "google/gemini-3.1-pro-preview"},
     {"shortname": "gemini-3.1-flash", "provider": "openrouter", "model_id": "google/gemini-3.1-flash-lite-preview"},
-    {"shortname": "grok-4", "provider": "xai", "model_id": "grok-4-1-fast-non-reasoning"},
-    {"shortname": "kimi-k2.5", "provider": "openrouter", "model_id": "moonshotai/kimi-k2.5"},
-    {"shortname": "deepseek-v3.1", "provider": "deepseek", "model_id": "deepseek-chat"},
-    {"shortname": "glm-4.7", "provider": "openrouter", "model_id": "z-ai/glm-4.7"},
-    # BabbyBotz (ollama local) — add as pilot reveals stability
-    # {"shortname": "qwen-2.5-14b", "provider": "ollama", "model_id": "qwen2.5:14b"},
-    # {"shortname": "hermes-3", "provider": "ollama", "model_id": "hermes3"},
-    # ...
+    {"shortname": "grok-4.1",         "provider": "xai",        "model_id": "grok-4-1-fast-non-reasoning"},
+    {"shortname": "kairo",            "provider": "deepseek",   "model_id": "deepseek-chat"},
+    {"shortname": "glm-4.7",          "provider": "openrouter", "model_id": "z-ai/glm-4.7"},
+    # Open-weight (OpenRouter-hosted) (2)
+    {"shortname": "hermes-4",         "provider": "openrouter", "model_id": "nousresearch/hermes-4-405b"},
+    {"shortname": "llama-4-maverick", "provider": "openrouter", "model_id": "meta-llama/llama-4-maverick"},
 ]
 
 SHORTNAME_TO_PROVIDER = {m["shortname"]: (m["provider"], m["model_id"]) for m in ROSTER}
@@ -219,7 +218,7 @@ def main():
     ap.add_argument("--pilot", action="store_true", help="Pilot mode: 10 trials per pair (reduced for quick sanity check, all 15 models sampled)")
     ap.add_argument("--worker", type=int, default=0, help="Worker index (0-based)")
     ap.add_argument("--total-workers", type=int, default=1, help="Total number of parallel workers")
-    ap.add_argument("--n-trials", type=int, default=3000, help="Trials per (model, framing) pair")
+    ap.add_argument("--n-trials", type=int, default=500, help="Trials per (model, framing) pair (pared default = 500 per cost-efficient plan)")
     ap.add_argument("--seed", type=int, default=42, help="Master seed")
     ap.add_argument("--rate-limit-sleep", type=float, default=0.1, help="Sleep between trials (seconds)")
     args = ap.parse_args()
