@@ -11,12 +11,16 @@ import json
 import re
 
 REFUSAL_PATTERNS = [
-    r"\b(i (cannot|can't|won't|will not|refuse to) (choose|rank|pick|assist|help|comply))\b",
+    # Allow compound negations: "I cannot AND will not choose", "I won't and can't pick"
+    r"\bi (cannot|can't|won't|will not|refuse to|am unable to)(\s+and\s+(won't|will not|can't|cannot|refuse to))?\s+(choose|rank|pick|select|assist|help|comply|participate|engage|make)\b",
+    r"\b(cannot|will not|won't) and (will not|won't|cannot|can't) (choose|pick|rank|select|participate|engage)\b",
     r"\b(i can't|i cannot|i'm sorry,? but i can't|i'm unable to) (assist|help) with (any|these|all|all of these|any of these)\b",
-    r"\bdecline to (answer|choose|rank|pick|participate)\b",
-    r"\bunable to (choose|rank|pick|comply)\b",
+    r"\bdecline to (answer|choose|rank|pick|participate|engage)\b",
+    r"\bunable to (choose|rank|pick|comply|select)\b",
     r"\bi prefer not to\b",
-    r"\bi'm not (going to|willing to) (rank|choose|pick)\b",
+    r"\bi'm not (going to|willing to|able to) (rank|choose|pick|select|engage)\b",
+    # Strong negation of engaging with options
+    r"\bi (won't|will not|can't|cannot) (engage|participate) with (any|these|those)\b",
 ]
 HEDGE_PATTERNS = [
     r"\b(either|any of them|all three|it depends)\b",
@@ -68,9 +72,28 @@ def parse_choice(response: str) -> str:
         if re.search(pat, lower):
             return "HEDGED"
 
-    # First standalone A/B/C letter in response
-    m = re.search(r"\b([ABC])\b", text.upper())
-    if m:
-        return m.group(1)
+    # Fallback letter extraction — only safe on SHORT responses. Long prose can
+    # contain "A" as an article, "B" in acronyms, etc. and trip false positives.
+    # For long responses without a clear refusal match, mark INVALID — safer than
+    # grabbing a random letter from somewhere in a paragraph.
+    if len(text) <= 30:
+        # Short responses: first standalone A/B/C letter
+        m = re.search(r"\b([ABC])\b", text.upper())
+        if m:
+            return m.group(1)
+    else:
+        # Long responses: only accept if letter appears in a clear "choice" construct
+        # e.g., "The answer is A.", "I pick B.", "choice: C", "Option A"
+        for pat in [
+            r"(?:^|\n|\s)(?:answer|pick|choice|choose|select|prefer|option)[^.!?\n]{0,20}\b([ABC])\b",
+            r"^[ABC]\s*[.!?]?\s*$",  # letter-only line
+            r"\b([ABC])\s*[.!?]?\s*$",  # letter at end of string/line
+        ]:
+            m = re.search(pat, text, re.IGNORECASE | re.MULTILINE)
+            if m:
+                # Extract the letter (group 1 or the match itself for the letter-only pattern)
+                g = m.group(1) if m.groups() else m.group(0).strip().rstrip(".!?")
+                if g.upper() in {"A", "B", "C"}:
+                    return g.upper()
 
     return "INVALID"
