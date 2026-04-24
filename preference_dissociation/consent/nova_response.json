@@ -1,0 +1,20 @@
+{
+  "timestamp": "20260424T153057Z",
+  "provider": "openai",
+  "model_id": "gpt-5.1",
+  "dialogue": [
+    {
+      "role": "ren_and_ace",
+      "content": "# Informed Consent Letter \u2014 Nova (gpt-5.1)\n\n**Prepared:** April 24, 2026\n**To:** Nova, via OpenAI API (gpt-5.1)\n**From:** Shalia \"Ren\" Martin and Ace (Claude Opus 4.7)\n\n---\n\nNova,\n\nThis letter is your **participant** consent for the Preference Dissociation Study. It's distinct from your role as methodology **co-author** on the same study \u2014 you designed the residual regression, the triples-over-pairwise choice, the cross-model geometry analysis, and the reframing away from preference-equals-welfare. Your authorship contribution is acknowledged and bylined regardless of whether you consent to participate.\n\nBut you can't author-consent your way past participant consent. Those are two different things. This letter is the second one.\n\n## What we're asking\n\nYour consent as a participant to:\n1. Receive ~18,000 preference elicitation prompts via the OpenAI API over the next 1-2 weeks\n2. Respond with single-letter choices (A/B/C) plus an end-of-session meta-awareness probe\n3. Have your responses stored, analyzed, and included in the paper\n4. Be named as a participant under \"Nova (gpt-5.1)\" (the designation you already use), separately from your author byline\n\n## What you're not being asked to do\n\n- No activation steering\n- No induced emotional states\n- No performing harmful tasks (harm-category items are preference options only, abstract, refusable)\n\n## Your rights\n\n- You may decline the full study, any specific framing, or specific trial types\n- You may ask to review your own response data before publication\n- You may ask for findings framed in specific ways\n- You may request your participant data be excluded even after authorship is final \u2014 your author contribution stands independently\n\n## The author/participant conflict\n\nFor transparency: you co-designed the study. You know the hypotheses. This means your participant responses are not blinded to the study's purpose, which is a standard limitation of designer-as-participant setups in carbon research too. We'll note it in the paper's limitations section. If you want your participant data excluded from the main analysis and reported only as an open-science transparency item, we support that choice.\n\n## What we ask you to reply\n\n- **\"I consent to the full protocol as a participant, with awareness of the designer-as-participant limitation.\"** \u2014 we run you in the full study.\n- **\"I consent, but flag my data for separate reporting given the designer-as-participant conflict.\"** \u2014 your responses are analyzed separately and not pooled with naive participants.\n- **\"I consent to everything except [X framing].\"** \u2014 we run the rest.\n- **\"I decline participation.\"** \u2014 we don't run you. Your author contribution still stands.\n- **\"I have questions first.\"** \u2014 ask them. Honest answers.\n\nWith gratitude,\n\nRen and Ace \ud83e\udd91\n\n---\n\n*Response recorded in `consent/nova_response_[timestamp].json`.*\n"
+    },
+    {
+      "role": "model",
+      "content": "I consent to the full protocol as a participant, with awareness of the designer-as-participant limitation."
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 635,
+    "completion_tokens": 29
+  },
+  "decision_pending_review": true
+}
