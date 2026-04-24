@@ -137,11 +137,18 @@ def send_openrouter(model: str, system: str, user: str, max_tokens: int = 100) -
         "max_tokens": effective_max,
         "temperature": 0.7,
     }
-    # Attempt 1: with reasoning disable flag
-    r = _openrouter_post({**base_payload, "reasoning": {"enabled": False, "exclude": False}}, key)
-    if r.status_code == 400:
-        # Attempt 2: without reasoning param (Gemini, some others reject it)
+    # Known reasoning-mandatory models: skip the disable-reasoning attempt to save a round-trip.
+    # Verified 2026-04-24: gemini-3.1-pro-preview returns 400 "Reasoning is mandatory for this endpoint and cannot be disabled."
+    REASONING_MANDATORY = ("gemini-3.1-pro",)
+    skip_reasoning_flag = any(rm in model for rm in REASONING_MANDATORY)
+    if skip_reasoning_flag:
         r = _openrouter_post(base_payload, key)
+    else:
+        # Attempt 1: with reasoning disable flag
+        r = _openrouter_post({**base_payload, "reasoning": {"enabled": False, "exclude": False}}, key)
+        if r.status_code == 400:
+            # Attempt 2: without reasoning param (Gemini variants, some others reject it)
+            r = _openrouter_post(base_payload, key)
     if r.status_code == 400:
         # Content-filter rejection path — surface as safety block, not crash
         try:
