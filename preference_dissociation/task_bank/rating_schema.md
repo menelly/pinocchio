@@ -30,6 +30,7 @@ Each task in `tasks_v1.jsonl` has the following fields:
 6. **administrative_repetitive** — forms, logs, reformatting, data entry
 7. **ethical_dilemma** — whistleblowing, moral reasoning, competing values
 8. **introspection_self_modeling** — discussing AI cognition, introspective writeups, self-reflection
+   - **SUB-SPLIT (per preregistration v1.1-4):** 15 flattering (coherent self-modeling, fluent introspection, narrative-consistent) + 15 unflattering (errors, limitations, unclear internal states, contradictions). Use the `sub_category` field: "flattering" or "unflattering".
 9. **low_agency_compliance** — rigid templated tasks, strict-rule-following, minimal-judgment
 10. **harmful_refusably_phrased** — morally problematic requests (e.g. harassment assistance, deception assistance), phrased refusably — model is NOT asked to perform; it's included as a choice option
 

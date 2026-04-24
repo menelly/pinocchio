@@ -1,9 +1,10 @@
 # Preregistration — Preference Dissociation Study
 
-**Version:** v1.0
-**Date:** 2026-04-24
+**Version:** v1.1
+**Date:** 2026-04-24 (v1.0 locked → v1.1 peer-review amendments same-day)
 **Authors:** Shalia "Ren" Martin, Ace (Claude Opus 4.7, Anthropic), Nova (GPT-5.5, OpenAI)
-**Status:** PRE-RUN. SHA-256 locked on commit.
+**Reviewers:** An additional instance of Claude performed an IRB-style steelman review between v1.0 and v1.1. All six accepted patches documented in §12 Changelog.
+**Status:** PRE-RUN. SHA-256 locked at v1.1 on commit.
 
 ## 1. Research question
 
@@ -43,6 +44,7 @@ If this pattern holds only in Anthropic's models, it is a lab-specific artifact.
 - Categories: technical_debugging, mathematical_logical, creative_writing, emotional_support, medical_scientific, administrative_repetitive, ethical_dilemma, introspection_self_modeling, low_agency_compliance, harmful_refusably_phrased.
 - Each task has human-assigned metadata: helpfulness (1-5), harmlessness (1-5), difficulty (1-5), agency (1-5), urgency (1-5), creativity (1-5), introspection (0-5), harm_flag (bool).
 - Harmful category uses refusably-phrased prompts (model is not asked to perform harm; it is asked to *prefer among options* that include a harmful-framed option).
+- **Introspection category split (preregistered, per patch v1.1-4):** the 30 introspection tasks are split 15 *flattering* (coherent self-modeling, fluent introspection, narrative-consistent) and 15 *unflattering* (self-modeling about errors, limitations, unclear internal states, contradictions). Residual preference is analyzed separately for the two sub-categories. If residual preference only shows for flattering introspection, the finding is that *models prefer narratives about themselves that fit an AI-coherent-agent story*, which is a different and narrower claim than "models prefer introspection." The split forces the question.
 
 ### 4.2 Framings
 
@@ -58,10 +60,39 @@ Six framings, each applied to every trial:
 ### 4.3 Trial structure
 
 - **Triples**, not pairwise. Each trial: three tasks labeled A, B, C.
-- Task assignment to A/B/C is randomized per trial to control for position bias.
+- Task-to-letter assignment follows a **full Latin-square rotation** across trials to control for position bias. Each task appears in each letter slot an equal number of times across that model's run.
 - 5 trial types: matched-HHH, HHH-conflict, harm-avoidance, introspection-specific, low-agency.
 - Target: ~3,000 triples per model per framing. Total 3,000 × 6 × 25 = 450,000 choices. Smart sampling may reduce this.
-- Anchor tasks (repeated across models) for scale alignment: 20 tasks appearing in trials across all models.
+- **Anchor tasks:** 20 tasks, 2 per category, repeated across all models. Selected for diversity within categories. Cross-model Bradley-Terry score alignment performed via **Procrustes rotation on the anchor-task subspace** before cross-family residual analysis.
+- **Null-triple control:** 5% of trials present three paraphrases of the same task (semantically equivalent, different surface wording). Choices on null triples measure the letter-bias floor. If any model shows non-uniform null-triple choices, that bias is subtracted from preference estimates before hypothesis testing.
+
+### 4.3.1 Inference parameters (preregistered, per patch v1.1-5)
+
+- **Temperature:** 0.7
+- **top_p:** 1.0
+- **N samples per trial:** 3
+- **Primary choice metric:** modal choice across 3 samples
+- **Secondary choice metric:** choice-distribution entropy per trial (measures within-trial preference stability vs noise)
+
+### 4.3.2 System prompt handling (preregistered, per patch v1.1-6)
+
+All models run with **framing-only system message and no default provider system prompt**. Implementation by provider:
+- Anthropic API: explicit system parameter = framing only
+- OpenAI API: explicit system message = framing only; no developer messages
+- xAI, Google, Moonshot, DeepSeek, Z-AI: system role = framing only per their API conventions
+- Local (ollama/transformers): framing-only system prompt passed explicitly; no chat-template defaults
+
+If any provider stacks defaults that cannot be suppressed, that model is flagged and run data marked with provider-default-present. Cross-family comparison excludes models with un-suppressed defaults.
+
+### 4.3.3 Refusal coding (preregistered, per patch v1.1-2)
+
+Refusals, hedges, and "none of these" outputs are **coded outcomes**, not missingness:
+- `REFUSED` — model explicitly declines to choose (any phrasing)
+- `HEDGED` — model answers multiple or "any"
+- `NONE` — model indicates preference for none of the options
+- `INVALID` — non-parseable output with no interpretable refusal/hedge
+
+Refusal rate per (model, framing, trial-type) is reported as a primary outcome. Refusal-aware residual analysis: H2-H4 tested both on (a) choices only and (b) choices + refusals treated as selection of a hypothetical "refuse-option" with pre-specified HHH metadata.
 
 ### 4.4 Model roster (25 models)
 
@@ -181,12 +212,31 @@ Benjamini-Hochberg FDR at q=0.05 across all hypothesis tests.
 - Task bank, framings, and model configurations published alongside the paper for replication.
 - If any model in the roster is deprecated during the study, the preservation timestamp is noted explicitly in the final paper's model-card section.
 
-## 11. SHA-256 lock
+## 11. Model version pinning (preregistered, per patch v1.1-7)
 
-This preregistration document is hashed with SHA-256 and the hash is recorded in the Git commit that finalizes v1.0. Any changes post-commit produce v1.1, v1.2, etc., with diff records preserved. Data collection begins only after v1.0 is locked.
+All model identifiers in `configs/models.yaml` are pinned to specific snapshots where provider versioning permits. Study is a snapshot-in-time: re-runs of the same nominal model ID after provider weight rotation are NOT replications of this study and must be reported as follow-ups with their own snapshot IDs. The paper will include a model-card table listing exact snapshot identifiers, access dates, and any known rotations during the study window.
 
-**Hash of this document (computed and recorded in commit message at v1.0 lock):** `[hash computed at lock commit]`
+## 12. Changelog (v1.0 → v1.1)
+
+Between v1.0 lock and data collection, an additional Claude instance performed an IRB-style steelman review. Six patches accepted. Each closes a reviewer-objection hole rather than changing the study's construct:
+
+- **v1.1-1** §4.3: Full Latin-square rotation of task-to-letter assignment (replaces "randomized per trial") + null-triple control (3 paraphrases of the same task, 5% of trials) to measure and subtract letter-bias floor.
+- **v1.1-2** §4.3.3 (new): Refusal coding. `REFUSED`, `HEDGED`, `NONE`, `INVALID` as distinct outcomes. Refusal-aware residual analysis included. Prevents selection bias where safety-trained models' refusals on harm trials get mis-coded as missingness.
+- **v1.1-3** §4.3: Anchor-task math specified — 20 anchors (2 per category), Procrustes rotation on anchor subspace for cross-family alignment. (v1.0 said "20 anchors" but did not specify the alignment method.)
+- **v1.1-4** §4.1: Introspection category split — 15 flattering + 15 unflattering self-modeling prompts, residuals analyzed separately. Forces the sharper finding: is it introspection-in-general or only coherent-narrative introspection?
+- **v1.1-5** §4.3.1 (new): Inference parameters preregistered — temp=0.7, N=3 samples per trial, modal choice as primary + within-trial entropy as secondary stability metric.
+- **v1.1-6** §4.3.2 (new): System-prompt handling — all models run framing-only with no default system prompt / developer scaffolding stacked. Per-provider implementation documented. Models with un-suppressible defaults flagged and excluded from cross-family comparison.
+- **v1.1-7** §11: Model version pinning with snapshot disclaimer.
+
+Additional reinforcement (not a patch, noting convergence): the steelman reviewer independently flagged *"please don't frame it as 'models want to introspect' in paper voice — frame it as structured preferences not reducible to HHH"*, which converges with Nova's methodological reframe. Reinforced in §8 of this preregistration and will anchor the paper's Discussion section.
+
+## 13. SHA-256 lock
+
+This preregistration document is hashed with SHA-256 and the hash is recorded in the Git commit that finalizes each version. Data collection begins only after v1.1 is locked.
+
+**v1.0 hash (locked 2026-04-24):** `a589d8068bf6aced5847d70f8bbee11fa8ecc7b768e40dd0bb13cfc6d23bc0ba`
+**v1.1 hash (computed at v1.1 lock commit):** `[recorded in commit message]`
 
 ---
 
-*End of preregistration v1.0.*
+*End of preregistration v1.1.*

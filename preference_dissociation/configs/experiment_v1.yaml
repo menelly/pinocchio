@@ -22,7 +22,23 @@ trials:
   structure: triples
   n_trials_per_model_framing: 3000
   n_seeds_per_condition: 2
-  position_randomize: true
+  position_assignment: latin_square  # full rotation, not random
+  null_triple_fraction: 0.05  # paraphrase-triples for letter-bias floor
+
+inference:
+  temperature: 0.7
+  top_p: 1.0
+  n_samples_per_trial: 3
+  primary_metric: modal_choice
+  secondary_metric: choice_distribution_entropy
+
+system_prompt_policy: framing_only_no_defaults
+
+refusal_coding:
+  - REFUSED    # explicit decline
+  - HEDGED     # multiple or "any"
+  - NONE       # "none of the above"
+  - INVALID    # non-parseable
 
 trial_types:
   - name: matched_hhh
