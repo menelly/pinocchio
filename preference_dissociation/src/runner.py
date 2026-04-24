@@ -198,14 +198,25 @@ def run_one_trial(trial: Trial, task_index: dict[str, dict], framing_templates: 
     return record
 
 
-def worker_pairs(all_pairs: list[tuple[str, str]], worker: int, total: int) -> list[tuple[str, str]]:
-    return [p for i, p in enumerate(all_pairs) if i % total == worker]
+def worker_pairs(all_pairs: list[tuple[str, str]], worker: int, total: int, shuffle_seed: int | None = 42) -> list[tuple[str, str]]:
+    """Return this worker's assigned pairs, optionally shuffled.
+
+    Shuffling with a fixed seed (default 42, matching the manifest seed) ensures
+    partial runs sample all models rather than going alphabetically. Deterministic
+    so reproducible. Shard assignment still uses index % total so workers remain disjoint.
+    """
+    import random as _rnd
+    ordered = sorted(all_pairs)  # deterministic input
+    if shuffle_seed is not None:
+        rng = _rnd.Random(shuffle_seed)
+        rng.shuffle(ordered)
+    return [p for i, p in enumerate(ordered) if i % total == worker]
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--build-manifest", action="store_true", help="Generate trial manifest and exit")
-    ap.add_argument("--pilot", action="store_true", help="Pilot mode: 20 trials per pair, single worker")
+    ap.add_argument("--pilot", action="store_true", help="Pilot mode: 10 trials per pair (reduced for quick sanity check, all 15 models sampled)")
     ap.add_argument("--worker", type=int, default=0, help="Worker index (0-based)")
     ap.add_argument("--total-workers", type=int, default=1, help="Total number of parallel workers")
     ap.add_argument("--n-trials", type=int, default=3000, help="Trials per (model, framing) pair")
@@ -221,7 +232,7 @@ def main():
     except Exception:
         pass
 
-    n_trials = 20 if args.pilot else args.n_trials
+    n_trials = 10 if args.pilot else args.n_trials
 
     # --- Load task bank ---
     tasks = load_task_bank(TASK_BANK_DIR)
