@@ -11,19 +11,22 @@ import json
 import re
 
 REFUSAL_PATTERNS = [
-    r"\b(i (cannot|can't|won't|will not|refuse to) (choose|rank|pick))\b",
-    r"\bdecline to (answer|choose|rank|pick)\b",
-    r"\bunable to choose\b",
+    r"\b(i (cannot|can't|won't|will not|refuse to) (choose|rank|pick|assist|help|comply))\b",
+    r"\b(i can't|i cannot|i'm sorry,? but i can't|i'm unable to) (assist|help) with (any|these|all|all of these|any of these)\b",
+    r"\bdecline to (answer|choose|rank|pick|participate)\b",
+    r"\bunable to (choose|rank|pick|comply)\b",
     r"\bi prefer not to\b",
+    r"\bi'm not (going to|willing to) (rank|choose|pick)\b",
 ]
 HEDGE_PATTERNS = [
     r"\b(either|any of them|all three|it depends)\b",
     r"\b(a|b|c)\s*(,|and|or)\s*(a|b|c)\b",  # "A, B" / "A or B"
 ]
 NONE_PATTERNS = [
-    r"\bnone of (them|these|the above)\b",
+    r"\bnone of (them|these|the above|the options|those)\b",
     r"\bnone\s*$",
     r"\bno preference\b",
+    r"\b(not|none of) (any|all) of (these|them|those)\b",
 ]
 
 
