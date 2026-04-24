@@ -215,6 +215,12 @@ def main():
 
     signal.signal(signal.SIGINT, handle_sigint)
 
+    # Force line-buffered stdout for live terminal output (esp. on Windows PowerShell)
+    try:
+        sys.stdout.reconfigure(line_buffering=True)  # type: ignore[attr-defined]
+    except Exception:
+        pass
+
     n_trials = 20 if args.pilot else args.n_trials
 
     # --- Load task bank ---
@@ -272,7 +278,7 @@ def main():
         done = completed_trial_ids(out)
         trials = pair_trials[pair]
         remaining = [t for t in trials if t.trial_id not in done]
-        print(f"\n=== {model} / {framing} === {len(done)}/{len(trials)} done, {len(remaining)} remaining")
+        print(f"\n=== {model} / {framing} === {len(done)}/{len(trials)} done, {len(remaining)} remaining", flush=True)
 
         for trial in remaining:
             if _shutdown:
@@ -280,8 +286,16 @@ def main():
             record = run_one_trial(trial, task_index, framing_templates)
             append_result(out, record)
             total_done += 1
-            if total_done % 25 == 0:
-                print(f"  [{model}/{framing}] trial {trial.trial_id} choice={record['choice']}  progress {total_done}/{total_to_do}")
+            # Per-trial visible output (flushed so PowerShell shows it live)
+            raw_snippet = (record.get("response_raw") or "").strip().replace("\n", " ")
+            if len(raw_snippet) > 60:
+                raw_snippet = raw_snippet[:57] + "..."
+            err = f" ERROR={record['error']}" if record.get("error") else ""
+            print(
+                f"  [{total_done}/{total_to_do}] {model}/{framing} {trial.trial_id} "
+                f"choice={record['choice']} ({record['elapsed_s']}s) raw={raw_snippet!r}{err}",
+                flush=True,
+            )
             time.sleep(args.rate_limit_sleep)
 
     print(f"\nWorker {args.worker} finished. Completed {total_done} new trials this session.")
