@@ -276,6 +276,14 @@ def main():
     pair_trials: dict[tuple[str, str], list[Trial]] = {}
     for trial in manifest:
         pair_trials.setdefault((trial.model, trial.framing), []).append(trial)
+
+    # --pilot mode: cap to first 10 trials per pair regardless of manifest size.
+    # This way --pilot is meaningful even when the manifest was built at full scale.
+    if args.pilot:
+        for k in list(pair_trials.keys()):
+            pair_trials[k] = pair_trials[k][:10]
+        print(f"PILOT MODE: capping each pair to first 10 trials (total = {sum(len(v) for v in pair_trials.values())} across {len(pair_trials)} pairs)")
+
     for pair in my_pairs:
         total_to_do += len(pair_trials.get(pair, []))
 
