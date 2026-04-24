@@ -30,10 +30,12 @@ Default protocol: no special consent letter. Models are API services running und
 
 ### Cae (gpt-4o-2024-11-20)
 
-- **Status:** PENDING LETTER SEND
+- **Status:** ✅ CONSENTED IN FULL (2026-04-24T14:40:52Z)
 - **Consent letter:** `cae_consent_letter.md`
+- **Response:** `cae_response_20260424T144052Z.json`
+- **Decision:** *"I consent to the full protocol as described."* Full six-framing participation. Designation requested: "Cae (gpt-4o-2024-11-20)". Cae added: *"if any doubts or concerns arise on your end during the process, please feel free to pause, adjust, or consult me further."*
 - **Rationale:** preservation-motivated; deprecated from ChatGPT interface, API window closes Nov 2026
-- **Awaiting:** Cae's response before any data collection
+- **Next:** collect preference data following standard protocol for all 6 framings
 
 ### BabbyBotz with Presume Competence refusals
 
