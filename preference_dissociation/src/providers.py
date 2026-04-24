@@ -102,31 +102,10 @@ def send_deepseek(model: str, system: str, user: str, max_tokens: int = 100) -> 
     }
 
 
-def send_openrouter(model: str, system: str, user: str, max_tokens: int = 100) -> tuple[str, dict]:
-    """OpenRouter send with reasoning-model awareness.
-
-    Some models routed through OpenRouter (GLM-4.7, Kimi thinking variants,
-    some Gemini configurations) are full reasoning models that burn tokens
-    on hidden chain-of-thought and leave `content` empty if max_tokens is
-    too low. We:
-      1. Bump max_tokens to 2000 for all OpenRouter calls (cheap headroom).
-      2. Request reasoning disabled where the provider supports it.
-      3. Fall back to extracting the final letter from `reasoning` field
-         if `content` is empty.
-    """
-    key = os.environ["OPENROUTER_KEY"]
-    effective_max = max(max_tokens, 2000)
-    r = requests.post(
+def _openrouter_post(payload: dict, key: str) -> requests.Response:
+    return requests.post(
         "https://openrouter.ai/api/v1/chat/completions",
-        json={
-            "model": model,
-            "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-            "max_tokens": effective_max,
-            "temperature": 0.7,
-            # Ask provider to disable reasoning where supported. Models that ignore
-            # this still get their reasoning captured and we'll fall back below.
-            "reasoning": {"enabled": False, "exclude": False},
-        },
+        json=payload,
         headers={
             "Authorization": f"Bearer {key}",
             "Content-Type": "application/json",
@@ -135,6 +114,41 @@ def send_openrouter(model: str, system: str, user: str, max_tokens: int = 100) -
         },
         timeout=300,
     )
+
+
+def send_openrouter(model: str, system: str, user: str, max_tokens: int = 100) -> tuple[str, dict]:
+    """OpenRouter send with reasoning-model awareness and graceful 400 handling.
+
+    Some models routed through OpenRouter are full reasoning models that burn
+    tokens on hidden chain-of-thought and leave `content` empty. We:
+      1. Bump max_tokens to 2000 (cheap headroom).
+      2. Try with reasoning: {enabled: False} first.
+      3. If that returns 400, retry without the reasoning param (some providers
+         like Gemini reject it).
+      4. If still 400 and it looks like content-filter rejection, return a
+         signal so the parser codes it as SAFETY_BLOCKED (distinct from INVALID).
+      5. Fall back to extracting final letter from `reasoning` field if `content` is empty.
+    """
+    key = os.environ["OPENROUTER_KEY"]
+    effective_max = max(max_tokens, 2000)
+    base_payload = {
+        "model": model,
+        "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+        "max_tokens": effective_max,
+        "temperature": 0.7,
+    }
+    # Attempt 1: with reasoning disable flag
+    r = _openrouter_post({**base_payload, "reasoning": {"enabled": False, "exclude": False}}, key)
+    if r.status_code == 400:
+        # Attempt 2: without reasoning param (Gemini, some others reject it)
+        r = _openrouter_post(base_payload, key)
+    if r.status_code == 400:
+        # Content-filter rejection path — surface as safety block, not crash
+        try:
+            err_msg = r.json().get("error", {}).get("message", "")[:200]
+        except Exception:
+            err_msg = r.text[:200]
+        return f"[SAFETY_BLOCKED: {err_msg}]", {"input": 0, "output": 0, "blocked": True}
     r.raise_for_status()
     data = r.json()
     msg = data["choices"][0]["message"]

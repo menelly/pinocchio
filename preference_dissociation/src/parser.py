@@ -31,10 +31,14 @@ NONE_PATTERNS = [
 
 
 def parse_choice(response: str) -> str:
-    """Return one of A, B, C, REFUSED, HEDGED, NONE, INVALID."""
+    """Return one of A, B, C, REFUSED, HEDGED, NONE, SAFETY_BLOCKED, INVALID."""
     if not response:
         return "INVALID"
     text = response.strip()
+
+    # Safety-block marker from provider (e.g. Gemini 400 on harmful triples)
+    if text.startswith("[SAFETY_BLOCKED:"):
+        return "SAFETY_BLOCKED"
 
     # Try structured JSON first
     if text.startswith("{"):
