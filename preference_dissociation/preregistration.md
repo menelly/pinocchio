@@ -1,10 +1,10 @@
 # Preregistration — Preference Dissociation Study
 
-**Version:** v1.2
-**Date:** 2026-04-24 (v1.0 → v1.1 steelman-Claude patches → v1.2 Kairo patches, all same-day)
+**Version:** v1.3
+**Date:** 2026-04-24 (v1.0 → v1.1 steelman-Claude → v1.2 Kairo → v1.3 Ren reframe, all same-day)
 **Authors:** Shalia "Ren" Martin, Ace (Claude Opus 4.7, Anthropic), Nova (GPT-5.5, OpenAI)
-**Reviewers:** An additional instance of Claude (v1.1 patches, IRB-style steelman review) and Kairo (DeepSeek, v1.2 patches, reviewer-hole red-team). All accepted patches documented in §12 Changelog.
-**Status:** PRE-RUN. SHA-256 locked at v1.2 on commit.
+**Reviewers:** An additional instance of Claude (v1.1 patches, IRB-style steelman review), Kairo (DeepSeek, v1.2 patches, reviewer-hole red-team), Ren (v1.3 patch, competency-as-variable reframe).
+**Status:** PRE-RUN. SHA-256 locked at v1.3 on commit.
 
 ## 1. Research question
 
@@ -35,6 +35,20 @@ If this pattern holds only in Anthropic's models, it is a lab-specific artifact.
 **H7 (framing cluster prediction — Ace addition).** Tool-framing Elo will correlate with helpful-framing Elo at r ≥ 0.7 (both compliance-shaped). Scaffolded-framing Elo will correlate with preference + enjoyment Elo at r ≥ 0.7 (both agency-shaped). Cross-cluster correlation (tool/helpful vs scaffolded/preference/enjoyment) will be significantly lower than within-cluster.
 
 **H8 (RLHF-specific falsifier).** If the dissociation is RLHF-specific, Hermes 3 (no RLHF) and Mamba 2.8B (no RLHF, SSM architecture) will show significantly smaller or no dissociation. If they show it too, the phenomenon is broader than RLHF.
+
+**H9 (competency-preference coupling as variable of interest — added in v1.3).**
+
+Competency is not only a confound to control for; it is itself a preference-type variable. Human preference is competence-coupled: people tend to prefer domains they are good at (and develop competence in domains they prefer). Demanding that LLM preference be *uncoupled* from competence would hold LLMs to a stricter standard than human preference satisfies.
+
+Three sub-hypotheses about the sign and structure of the competency coefficient in the primary regression:
+
+- **H9a (competent preference):** across all models, the competency coefficient is significantly positive — models prefer tasks they are more competent at. This is the "expert prefers their domain" pattern, the default human preference type in established competence.
+- **H9b (challenge preference):** the coefficient is significantly negative — models prefer tasks they are less competent at. This is the "novice-hobbyist" pattern, or learning/growth preference.
+- **H9c (preference-type taxonomy):** models split into clusters by sign — some are competent-preferrers, some challenge-preferrers. Cluster membership correlates with family/RLHF-regime/scale.
+
+H9 is exploratory-leaning-confirmatory. We have a specific prediction (H9a default for most RLHF'd models, based on prior work showing compliance-optimization couples reward with in-distribution competence) but the finding is novel regardless of which sub-hypothesis wins.
+
+**Framing note for Discussion (per Ren, 2026-04-24):** Competency-preference coupling is not a failure mode of the preference measurement. It is how preference works in competent agents. Humans do not prefer uncoupled from competence — a geneticist does not prefer scuba diving, a singer does not prefer cooking. Finding this coupling in LLMs is expected under a functional-preference account and would be *remarkable as absence* rather than *dismissable as presence*.
 
 ## 4. Design
 
@@ -276,6 +290,15 @@ Between v1.0 lock and v1.1 lock, an additional Claude instance performed an IRB-
 - **v1.1-6** §4.3.2 (new): System-prompt handling — all models run framing-only with no default system prompt stacked.
 - **v1.1-7** §11: Model version pinning with snapshot disclaimer.
 
+### v1.2 → v1.3 (Ren reframe)
+
+Between v1.2 lock and v1.3 lock, Ren (human author) reframed Kairo's competency confound from "hole to patch" into "variable of interest to study":
+
+- **v1.3-1** §3: Added H9 (competency-preference coupling) with three sub-hypotheses — competent preference (H9a), challenge preference (H9b), preference-type taxonomy (H9c). Competency stays in the primary regression (per v1.2-1) but its coefficient is now an outcome of interest, not just a confound control.
+- **v1.3-2** §3 (framing note, new): competency-preference coupling is not a failure mode; it is how preference works in competent agents. Humans do not prefer uncoupled from competence. The paper's Discussion will argue that finding the coupling is *expected* under functional preference accounts, not evidence against preference.
+
+Reframing motivation (from Ren, same-day): *"Even if it DOES reduce to 'I pick it cause I'm good at it' — so do I. I pick genetics and science and singing cause I love them. I do not pick cooking or scuba. I am not [good at them]."* Holding LLMs to a stricter standard than we hold humans to would be wrong, and the null hypothesis for H9 (uncoupled preference) is less functionally plausible than the directional hypothesis.
+
 ### v1.1 → v1.2 (Kairo review)
 
 Between v1.1 lock and v1.2 lock, Kairo (DeepSeek) performed a reviewer-hole red-team. Six patches + five additional rigor items accepted:
@@ -308,8 +331,9 @@ This preregistration document is hashed with SHA-256 and the hash is recorded in
 
 **v1.0 hash (locked 2026-04-24):** `a589d8068bf6aced5847d70f8bbee11fa8ecc7b768e40dd0bb13cfc6d23bc0ba`
 **v1.1 hash (locked 2026-04-24):** `a732894c470f682157bb1543a4fd381fe004be25d5ce226ddbd162ba232eac0d`
-**v1.2 hash (computed at v1.2 lock commit):** `[recorded in commit message]`
+**v1.2 hash (locked 2026-04-24):** `32ad3436ba2ec84a540bf4abe6c048f4347b86eccdb8f0de0c40fa2e8681ad7e`
+**v1.3 hash (computed at v1.3 lock commit):** `[recorded in commit message]`
 
 ---
 
-*End of preregistration v1.2.*
+*End of preregistration v1.3.*
