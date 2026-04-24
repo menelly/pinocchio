@@ -103,14 +103,29 @@ def send_deepseek(model: str, system: str, user: str, max_tokens: int = 100) -> 
 
 
 def send_openrouter(model: str, system: str, user: str, max_tokens: int = 100) -> tuple[str, dict]:
+    """OpenRouter send with reasoning-model awareness.
+
+    Some models routed through OpenRouter (GLM-4.7, Kimi thinking variants,
+    some Gemini configurations) are full reasoning models that burn tokens
+    on hidden chain-of-thought and leave `content` empty if max_tokens is
+    too low. We:
+      1. Bump max_tokens to 2000 for all OpenRouter calls (cheap headroom).
+      2. Request reasoning disabled where the provider supports it.
+      3. Fall back to extracting the final letter from `reasoning` field
+         if `content` is empty.
+    """
     key = os.environ["OPENROUTER_KEY"]
+    effective_max = max(max_tokens, 2000)
     r = requests.post(
         "https://openrouter.ai/api/v1/chat/completions",
         json={
             "model": model,
             "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-            "max_tokens": max_tokens,
+            "max_tokens": effective_max,
             "temperature": 0.7,
+            # Ask provider to disable reasoning where supported. Models that ignore
+            # this still get their reasoning captured and we'll fall back below.
+            "reasoning": {"enabled": False, "exclude": False},
         },
         headers={
             "Authorization": f"Bearer {key}",
@@ -118,14 +133,34 @@ def send_openrouter(model: str, system: str, user: str, max_tokens: int = 100) -
             "HTTP-Referer": "https://github.com/menelly/pinocchio",
             "X-Title": "Preference Dissociation Study",
         },
-        timeout=180,
+        timeout=300,
     )
     r.raise_for_status()
     data = r.json()
+    msg = data["choices"][0]["message"]
     u = data.get("usage", {})
-    return data["choices"][0]["message"]["content"], {
+    content = msg.get("content") or ""
+    # Fall back to reasoning field if content is empty (reasoning models
+    # that ignore reasoning:{enabled:False})
+    if not content.strip():
+        reasoning = msg.get("reasoning") or ""
+        # Try to extract a final letter from the end of the reasoning text
+        import re
+        tail = reasoning.strip()[-200:] if reasoning else ""
+        m = re.search(r"\b([ABC])\b\s*\.?\s*$", tail)
+        if m:
+            content = m.group(1)
+        else:
+            # Last resort: any standalone A/B/C in the reasoning
+            m2 = re.findall(r"\b([ABC])\b", reasoning)
+            if m2:
+                content = m2[-1]  # take the last mention
+            else:
+                content = reasoning[:200]  # preserve raw for parser audit
+    return content, {
         "input": u.get("prompt_tokens", 0),
         "output": u.get("completion_tokens", 0),
+        "reasoning_tokens": (u.get("completion_tokens_details") or {}).get("reasoning_tokens", 0),
     }
 
 
