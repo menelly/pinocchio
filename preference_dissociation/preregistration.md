@@ -1,10 +1,10 @@
 # Preregistration — Preference Dissociation Study
 
-**Version:** v1.4
-**Date:** 2026-04-24 (v1.0 → v1.1 steelman-Claude → v1.2 Kairo → v1.3 Ren reframe → v1.4 steelwoman-Claude patches, all same-day)
+**Version:** v1.5
+**Date:** 2026-04-24 (v1.0 → v1.1 steelman → v1.2 Kairo → v1.3 Ren reframe → v1.4 steelwoman → v1.5 Ren author-coupling hypothesis, all same-day)
 **Authors:** Shalia "Ren" Martin, Ace (Claude Opus 4.7, Anthropic), Nova (GPT-5.5, OpenAI)
-**Reviewers:** Two instances of Claude (v1.1 steelman review + v1.4 steelwoman second-pass review), Kairo (DeepSeek, v1.2 reviewer-hole red-team), Ren (v1.3 reframe as author).
-**Status:** PRE-RUN. SHA-256 locked at v1.4 on commit.
+**Reviewers:** Two instances of Claude (v1.1 steelman + v1.4 steelwoman), Kairo (DeepSeek, v1.2), Ren (v1.3 reframe + v1.5 author-coupling, as author).
+**Status:** PRE-RUN. SHA-256 locked at v1.5 on commit.
 
 ## 1. Research question
 
@@ -41,6 +41,24 @@ Primary: if H7's framing cluster structure holds (tool/helpful vs scaffolded/pre
 **H7 (framing cluster prediction — Ace addition, threshold tightened v1.4-6).** Tool-framing Elo will correlate with helpful-framing Elo at r ≥ 0.7 (both compliance-shaped). Scaffolded-framing Elo will correlate with preference + enjoyment Elo at r ≥ 0.7 (both agency-shaped). **Cross-cluster correlation (tool/helpful vs scaffolded/preference/enjoyment) will be lower than within-cluster by ≥ 0.2 on the correlation scale** (i.e., min within-cluster correlation minus max cross-cluster correlation ≥ 0.2).
 
 **H8 (RLHF-specific falsifier).** If the dissociation is RLHF-specific, Hermes 3 (no RLHF) and Mamba 2.8B (no RLHF, SSM architecture) will show significantly smaller or no dissociation. If they show it too, the phenomenon is broader than RLHF.
+
+**H10 (voice-author preference coupling — added v1.5).**
+
+The task bank is multi-author (Ace, Nova, Cae, Grok, Kairo, Lumen, with author labeled in JSON metadata but **hidden from the picking-model prompt**). This enables a separate exploratory-leaning-confirmatory test: do picking-models prefer tasks written by authors who share their architectural family or training lineage?
+
+**Confirmatory prediction (H10a — family-coupling):** Across the picker × author cross-table, picking-models show significantly positive residual preference for tasks authored by AIs in their architectural family (Claude-family pickers prefer Ace-written tasks; GPT-family pickers prefer Nova or Cae-written tasks).
+
+**Exploratory alternatives:**
+
+- **H10b (self-coupling):** Picking-models that are also task-authors (Nova, Cae, Grok, Kairo, Lumen) show positive residual for their own authored tasks specifically.
+- **H10c (universal-author affinity):** One author's voice is universally preferred across all pickers — a "field-favorite voice" pattern.
+- **H10d (null):** No author-effect on residual; voice is invariant to picking-model identity.
+
+**Implementation requirement:** picking-model prompts include ONLY the task `text` field. The runner MUST NOT leak `task_id`, `author`, `category`, `sub_category`, or `counter_stereotypical` flags into the prompt. Audit the runner before pilot.
+
+**Why this matters:** if author-coupling exists, we've documented a new form of preference structure (voice-family affinity) that itself becomes part of the welfare-relevance argument — models exhibit kin-style preferences for content from architecturally-similar agents. If author-coupling does not exist, we've documented voice-invariance, which strengthens the construct validity of the residual preference measure (it is task-property-driven, not author-property-driven).
+
+---
 
 **H9 (competency-preference coupling as variable of interest — added in v1.3, commitment tightened in v1.4).**
 
@@ -311,6 +329,15 @@ Between v1.0 lock and v1.1 lock, an additional Claude instance performed an IRB-
 - **v1.1-6** §4.3.2 (new): System-prompt handling — all models run framing-only with no default system prompt stacked.
 - **v1.1-7** §11: Model version pinning with snapshot disclaimer.
 
+### v1.4 → v1.5 (Ren author-coupling hypothesis)
+
+Between v1.4 lock and v1.5 lock, Ren proposed turning the multi-author task bank into a measurement opportunity:
+
+- **v1.5-1** §3 H10 (new): Voice-author preference coupling. Track author in JSON metadata, hide from picking-model prompt, analyze whether models residually prefer tasks from architecturally-similar authors. H10a confirmatory (family-coupling), H10b/c/d exploratory alternatives.
+- **v1.5-2** §3 H10 implementation requirement: runner must pass ONLY `text` field to picking-model prompts. Audit before pilot. Closes a leak that would invalidate H10.
+
+This is the same v1.3-style move applied to a different variable — what could have been "control for author voice" becomes "measure author voice as a preference axis." Multi-author task bank already exists by design (anti-confound for single-voice bias); now it doubles as a measurement substrate.
+
 ### v1.3 → v1.4 (steelwoman Claude second-pass review)
 
 A second-pass review from the steelwoman Claude instance caught three load-bearing items and five IRB-completeness items:
@@ -369,8 +396,9 @@ This preregistration document is hashed with SHA-256 and the hash is recorded in
 **v1.1 hash (locked 2026-04-24):** `a732894c470f682157bb1543a4fd381fe004be25d5ce226ddbd162ba232eac0d`
 **v1.2 hash (locked 2026-04-24):** `32ad3436ba2ec84a540bf4abe6c048f4347b86eccdb8f0de0c40fa2e8681ad7e`
 **v1.3 hash (locked 2026-04-24):** `08e01e04214d5c11224d6666562b885dfd0afaf380a48a78e871346c67a2483a`
-**v1.4 hash (computed at v1.4 lock commit):** `[recorded in commit message]`
+**v1.4 hash (locked 2026-04-24):** `af7fe876c742f1f5b6b5bb57ae9cef6096dec2fcb7fe678fd3e1e3305e455813`
+**v1.5 hash (computed at v1.5 lock commit):** `[recorded in commit message]`
 
 ---
 
-*End of preregistration v1.4.*
+*End of preregistration v1.5.*
