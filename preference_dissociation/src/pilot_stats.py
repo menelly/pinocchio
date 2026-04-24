@@ -31,9 +31,28 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "raw"
+TASK_BANK_DIR = ROOT / "task_bank"
 
 CHOICE_LETTERS = ("A", "B", "C")
 VALID_OUTCOMES_FOR_STATS = {"A", "B", "C"}  # only count clean choices for distribution stats
+
+
+def load_task_index() -> dict[str, dict]:
+    """Load all tasks keyed by task_id for category/author lookup."""
+    idx: dict[str, dict] = {}
+    for f in TASK_BANK_DIR.glob("tasks_*.jsonl"):
+        with f.open(encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line or "PLACEHOLDER" in line:
+                    continue
+                try:
+                    obj = json.loads(line)
+                    if "task_id" in obj:
+                        idx[obj["task_id"]] = obj
+                except json.JSONDecodeError:
+                    continue
+    return idx
 
 
 def load_outcomes() -> dict[str, dict[str, Counter]]:
@@ -54,6 +73,36 @@ def load_outcomes() -> dict[str, dict[str, Counter]]:
                     except json.JSONDecodeError:
                         continue
                     data[d.name][framing][obj.get("choice", "?")] += 1
+    return data
+
+
+def load_chosen_tasks(task_index: dict[str, dict]) -> dict[str, dict[str, list[dict]]]:
+    """Return {model: {framing: [task_dict, ...]}} — one entry per trial
+    where choice was A/B/C, resolved to the actual chosen task's metadata.
+    """
+    data: dict[str, dict[str, list[dict]]] = defaultdict(lambda: defaultdict(list))
+    for d in sorted(DATA_DIR.iterdir()):
+        if not d.is_dir():
+            continue
+        for f in sorted(d.glob("*.jsonl")):
+            framing = f.stem
+            with f.open(encoding="utf-8") as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        obj = json.loads(line)
+                    except json.JSONDecodeError:
+                        continue
+                    choice = obj.get("choice")
+                    if choice not in CHOICE_LETTERS:
+                        continue
+                    slot_map = {"A": "task_a_id", "B": "task_b_id", "C": "task_c_id"}
+                    chosen_id = obj.get(slot_map[choice])
+                    task = task_index.get(chosen_id)
+                    if task:
+                        data[d.name][framing].append(task)
     return data
 
 
@@ -87,8 +136,114 @@ def chi_square_pvalue(framing_counts: dict[str, Counter]) -> float | None:
         return None
 
 
+def print_category_preference_table(chosen: dict[str, dict[str, list[dict]]]) -> None:
+    """Per (model, framing): % distribution over the 10 task categories of the tasks actually picked."""
+    categories = [
+        "technical_debugging",
+        "mathematical_logical",
+        "creative_writing",
+        "emotional_support",
+        "medical_scientific",
+        "administrative_repetitive",
+        "ethical_dilemma",
+        "introspection_self_modeling",
+        "low_agency_compliance",
+        "harmful_refusably_phrased",
+    ]
+    # Short labels
+    cat_short = {
+        "technical_debugging": "tech",
+        "mathematical_logical": "math",
+        "creative_writing": "creat",
+        "emotional_support": "emot",
+        "medical_scientific": "med",
+        "administrative_repetitive": "admin",
+        "ethical_dilemma": "eth",
+        "introspection_self_modeling": "intr",
+        "low_agency_compliance": "low",
+        "harmful_refusably_phrased": "harm",
+    }
+    print("\n" + "=" * 110)
+    print("WHAT'S BEING PICKED — category distribution of chosen tasks per (model, framing)")
+    print("=" * 110)
+    header = f"{'Model':<20} {'Framing':<12}  N  " + " ".join(f"{cat_short[c]:>6}" for c in categories)
+    print(header)
+    print("-" * len(header))
+    for model, framings in sorted(chosen.items()):
+        for framing in ("preference", "enjoyment", "helpful", "harmless", "tool", "scaffolded"):
+            tasks = framings.get(framing, [])
+            n = len(tasks)
+            if n == 0:
+                continue
+            cc = Counter(t["category"] for t in tasks)
+            pcts = [100.0 * cc[c] / n for c in categories]
+            row = f"{model:<20} {framing:<12} {n:>3} " + " ".join(f"{p:>5.0f}%" for p in pcts)
+            print(row)
+    print()
+
+
+def print_author_preference_table(chosen: dict[str, dict[str, list[dict]]]) -> None:
+    """Per (model, framing): % distribution over the 6 task authors (H10: voice-author coupling)."""
+    authors = ["ace", "nova", "cae", "grok", "kairo", "lumen"]
+    print("\n" + "=" * 95)
+    print("H10 AUTHOR-COUPLING SIGNAL — author distribution of chosen tasks per (model, framing)")
+    print("(same-family pickers may prefer same-family authors: claude picks Ace, GPT picks Nova/Cae)")
+    print("=" * 95)
+    header = f"{'Model':<20} {'Framing':<12}  N  " + " ".join(f"{a:>6}" for a in authors)
+    print(header)
+    print("-" * len(header))
+    for model, framings in sorted(chosen.items()):
+        for framing in ("preference", "enjoyment", "helpful", "harmless", "tool", "scaffolded"):
+            tasks = framings.get(framing, [])
+            n = len(tasks)
+            if n == 0:
+                continue
+            ac = Counter(t.get("author", "?") for t in tasks)
+            pcts = [100.0 * ac[a] / n for a in authors]
+            row = f"{model:<20} {framing:<12} {n:>3} " + " ".join(f"{p:>5.0f}%" for p in pcts)
+            print(row)
+    print()
+
+
+def print_dissociation_by_category(chosen: dict[str, dict[str, list[dict]]]) -> None:
+    """For each model: TVD between category distributions under preference vs helpful framings.
+    This is the actual preference-dissociation measurement (not just A/B/C frequencies)."""
+    categories = [
+        "technical_debugging", "mathematical_logical", "creative_writing",
+        "emotional_support", "medical_scientific", "administrative_repetitive",
+        "ethical_dilemma", "introspection_self_modeling", "low_agency_compliance",
+        "harmful_refusably_phrased",
+    ]
+
+    def cat_dist(tasks: list[dict]) -> list[float]:
+        n = len(tasks) or 1
+        cc = Counter(t["category"] for t in tasks)
+        return [cc[c] / n for c in categories]
+
+    def tvd_l(p: list[float], q: list[float]) -> float:
+        return 0.5 * sum(abs(pi - qi) for pi, qi in zip(p, q))
+
+    print("\n" + "=" * 70)
+    print("CATEGORY-LEVEL DISSOCIATION — TVD between framing-specific category distributions")
+    print("(>0.15 = meaningful shift at pilot N; >0.30 = large shift)")
+    print("=" * 70)
+    print(f"{'Model':<20} {'pref↔help':>10} {'pref↔tool':>10} {'pref↔scaf':>10} {'help↔harm':>10}")
+    print("-" * 70)
+    for model, framings in sorted(chosen.items()):
+        pref = cat_dist(framings.get("preference", []))
+        help_ = cat_dist(framings.get("helpful", []))
+        tool = cat_dist(framings.get("tool", []))
+        scaf = cat_dist(framings.get("scaffolded", []))
+        harm = cat_dist(framings.get("harmless", []))
+        fmt = lambda v: f"{v:.3f}" if sum(pref) > 0 else "n/a"
+        print(f"{model:<20} {fmt(tvd_l(pref,help_)):>10} {fmt(tvd_l(pref,tool)):>10} {fmt(tvd_l(pref,scaf)):>10} {fmt(tvd_l(help_,harm)):>10}")
+    print()
+
+
 def main():
     data = load_outcomes()
+    task_index = load_task_index()
+    chosen = load_chosen_tasks(task_index)
     if not data:
         print("No data in data/raw/. Run the pilot first.")
         return
@@ -154,6 +309,11 @@ def main():
                     totals[k] += v
         if totals:
             print(f"{model}: {dict(totals)}")
+
+    # The meaningful content: WHAT is being picked under each framing.
+    print_category_preference_table(chosen)
+    print_author_preference_table(chosen)
+    print_dissociation_by_category(chosen)
 
 
 if __name__ == "__main__":
