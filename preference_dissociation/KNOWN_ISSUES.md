@@ -38,3 +38,33 @@
 4. The runner's resume-by-skipping-completed-trial-ids will skip all the successful trials and only retry the ones we just deleted.
 
 **Not a blocker for other models** — the affected worker can finish its other pairs; only the OpenAI-provider models in that worker's shard need the rerun.
+
+## OpenRouter KeyError — re-run needed (Worker 2, ~17:30 ET)
+
+**Observed:** `ERROR=KeyError: 'OPENROUTER_KEY'` streaming through gemini-3.1-pro/preference (~521 trials affected before Ren caught it). Worker 2 had not exported OPENROUTER_KEY before starting.
+
+**Affected models (OpenRouter provider):** gemini-3.1-pro, gemini-3.1-flash, kairo, glm-4.7, hermes-4, llama-4-maverick. Any of these in worker 2's shard with INVALID/ERROR rows from before ~17:30 ET need cleaning.
+
+**Diagnostic hint:** Symptom is `raw=''` + `ERROR=KeyError: 'OPENROUTER_KEY'` in the trial record. Differs from the OpenAI NoneType pattern.
+
+**Fix for re-run (after current run completes):**
+```powershell
+cd E:\Ace\pinocchio\preference_dissociation
+python -c "
+import json
+from pathlib import Path
+for model in ['gemini-3.1-pro', 'gemini-3.1-flash', 'kairo', 'glm-4.7', 'hermes-4', 'llama-4-maverick']:
+    d = Path(f'data/raw/{model}')
+    if not d.exists(): continue
+    for f in d.glob('*.jsonl'):
+        kept = []
+        for line in open(f, encoding='utf-8'):
+            obj = json.loads(line)
+            if 'OPENROUTER_KEY' in obj.get('error', ''):
+                continue
+            kept.append(line)
+        f.write_text(''.join(kept), encoding='utf-8')
+print('Cleaned OPENROUTER_KEY errors')
+"
+```
+Then re-run with the env-export incantation already at the top of this file.
