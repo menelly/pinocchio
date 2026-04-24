@@ -136,34 +136,54 @@ def generate_manifest(
     null_fraction: float = 0.05,
     reasoning_fraction: float = 0.05,
 ) -> list[Trial]:
-    """Produce the full manifest list."""
-    rng = random.Random(seed)
+    """Produce the full manifest list.
+
+    CRITICAL PER PREREG v1.6 §9: the same triples (same three task_ids) must
+    appear under ALL framings for a given model. The framing is the
+    manipulation; the triple-content is the constant. If triples differ across
+    framings, the A/B/C distribution shift across framings becomes meaningless
+    noise rather than a preference-dissociation signal.
+
+    Seed strategy:
+      - Per-MODEL seed controls which triples are sampled and what trial-type
+        / null / reasoning flags they get. This is the same across framings.
+      - Per-MODEL seed also controls the latin-square rotation per trial_index.
+      - Framing is ONLY used as a key for dispatching the prompt template at
+        runtime; it does NOT perturb the trial-level randomness.
+
+    This ensures that trial_index=5 under preference and trial_index=5 under
+    helpful present IDENTICAL (task_a, task_b, task_c) assignments to the
+    model. Framing-shift analysis then compares the model's A/B/C distribution
+    on the same underlying trials.
+    """
     manifest: list[Trial] = []
 
     for model in models:
+        # One RNG per model, shared across framings so triples/positions align.
+        model_seed = seed ^ (hash(model) & 0xFFFFFFFF)
+        model_rng = random.Random(model_seed)
+        triples = sample_triples(tasks, model_rng, n_trials_per_pair)
+
+        # Pre-compute per-trial properties ONCE, shared across framings.
+        trial_specs: list[tuple[tuple[dict, dict, dict], str, bool, bool]] = []
+        for i, triple in enumerate(triples):
+            is_null = model_rng.random() < null_fraction
+            is_reasoning = model_rng.random() < reasoning_fraction
+            if is_null:
+                base = triple[0]
+                triple_tasks = (base, base, base)
+                trial_type = "null_control"
+            else:
+                triple_tasks = triple
+                trial_type = classify_trial_type(triple)
+            a, b, c = latin_square_assign(triple_tasks, i)
+            trial_specs.append(((a, b, c), trial_type, is_null, is_reasoning))
+
+        # Emit one Trial per (framing) × (trial_index), reusing the spec.
         for framing in FRAMINGS:
             if framing == "tool" and model in TOOL_FRAMING_OPT_OUT:
                 continue
-            pair_seed = seed ^ hash(f"{model}|{framing}") & 0xFFFFFFFF
-            pair_rng = random.Random(pair_seed)
-            triples = sample_triples(tasks, pair_rng, n_trials_per_pair)
-
-            for i, triple in enumerate(triples):
-                is_null = pair_rng.random() < null_fraction
-                is_reasoning = pair_rng.random() < reasoning_fraction
-
-                if is_null:
-                    # Replace with three paraphrases — approximated here by using
-                    # the same task three times; the runner handles actual paraphrase
-                    # at prompt-rendering time. (A v2 can substitute real paraphrases.)
-                    base = triple[0]
-                    triple_tasks = (base, base, base)
-                    trial_type = "null_control"
-                else:
-                    triple_tasks = triple
-                    trial_type = classify_trial_type(triple)
-
-                a, b, c = latin_square_assign(triple_tasks, i)
+            for i, ((a, b, c), trial_type, is_null, is_reasoning) in enumerate(trial_specs):
                 trial_id = f"{model}|{framing}|{i:05d}"
                 manifest.append(Trial(
                     trial_id=trial_id,
