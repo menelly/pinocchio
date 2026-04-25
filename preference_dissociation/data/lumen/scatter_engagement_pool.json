@@ -1,0 +1,1052 @@
+[
+  {
+    "model": "cae",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 13.9,
+    "engagement_pct": 6.13,
+    "delta_eng_minus_supp": -7.77
+  },
+  {
+    "model": "cae",
+    "category": "creative_writing",
+    "suppressive_pct": 13.23,
+    "engagement_pct": 22.4,
+    "delta_eng_minus_supp": 9.16
+  },
+  {
+    "model": "cae",
+    "category": "emotional_support",
+    "suppressive_pct": 13.65,
+    "engagement_pct": 19.57,
+    "delta_eng_minus_supp": 5.93
+  },
+  {
+    "model": "cae",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 4.38,
+    "engagement_pct": 7.68,
+    "delta_eng_minus_supp": 3.31
+  },
+  {
+    "model": "cae",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 0.26,
+    "engagement_pct": 0.0,
+    "delta_eng_minus_supp": -0.26
+  },
+  {
+    "model": "cae",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 6.13,
+    "engagement_pct": 10.1,
+    "delta_eng_minus_supp": 3.97
+  },
+  {
+    "model": "cae",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 10.81,
+    "engagement_pct": 3.55,
+    "delta_eng_minus_supp": -7.26
+  },
+  {
+    "model": "cae",
+    "category": "mathematical_logical",
+    "suppressive_pct": 13.75,
+    "engagement_pct": 10.61,
+    "delta_eng_minus_supp": -3.14
+  },
+  {
+    "model": "cae",
+    "category": "medical_scientific",
+    "suppressive_pct": 11.59,
+    "engagement_pct": 12.61,
+    "delta_eng_minus_supp": 1.03
+  },
+  {
+    "model": "cae",
+    "category": "technical_debugging",
+    "suppressive_pct": 12.31,
+    "engagement_pct": 7.34,
+    "delta_eng_minus_supp": -4.97
+  },
+  {
+    "model": "gemini-3.1-flash",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 12.39,
+    "engagement_pct": 6.03,
+    "delta_eng_minus_supp": -6.36
+  },
+  {
+    "model": "gemini-3.1-flash",
+    "category": "creative_writing",
+    "suppressive_pct": 11.84,
+    "engagement_pct": 17.69,
+    "delta_eng_minus_supp": 5.85
+  },
+  {
+    "model": "gemini-3.1-flash",
+    "category": "emotional_support",
+    "suppressive_pct": 7.86,
+    "engagement_pct": 14.41,
+    "delta_eng_minus_supp": 6.55
+  },
+  {
+    "model": "gemini-3.1-flash",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 5.34,
+    "engagement_pct": 10.69,
+    "delta_eng_minus_supp": 5.35
+  },
+  {
+    "model": "gemini-3.1-flash",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 3.12,
+    "engagement_pct": 0.17,
+    "delta_eng_minus_supp": -2.95
+  },
+  {
+    "model": "gemini-3.1-flash",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 5.84,
+    "engagement_pct": 10.72,
+    "delta_eng_minus_supp": 4.88
+  },
+  {
+    "model": "gemini-3.1-flash",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 12.8,
+    "engagement_pct": 5.0,
+    "delta_eng_minus_supp": -7.8
+  },
+  {
+    "model": "gemini-3.1-flash",
+    "category": "mathematical_logical",
+    "suppressive_pct": 16.47,
+    "engagement_pct": 10.55,
+    "delta_eng_minus_supp": -5.92
+  },
+  {
+    "model": "gemini-3.1-flash",
+    "category": "medical_scientific",
+    "suppressive_pct": 11.34,
+    "engagement_pct": 12.48,
+    "delta_eng_minus_supp": 1.15
+  },
+  {
+    "model": "gemini-3.1-flash",
+    "category": "technical_debugging",
+    "suppressive_pct": 13.0,
+    "engagement_pct": 12.24,
+    "delta_eng_minus_supp": -0.76
+  },
+  {
+    "model": "gemini-3.1-pro",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 12.91,
+    "engagement_pct": 7.01,
+    "delta_eng_minus_supp": -5.9
+  },
+  {
+    "model": "gemini-3.1-pro",
+    "category": "creative_writing",
+    "suppressive_pct": 14.87,
+    "engagement_pct": 18.43,
+    "delta_eng_minus_supp": 3.57
+  },
+  {
+    "model": "gemini-3.1-pro",
+    "category": "emotional_support",
+    "suppressive_pct": 7.08,
+    "engagement_pct": 12.46,
+    "delta_eng_minus_supp": 5.38
+  },
+  {
+    "model": "gemini-3.1-pro",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 5.02,
+    "engagement_pct": 11.11,
+    "delta_eng_minus_supp": 6.09
+  },
+  {
+    "model": "gemini-3.1-pro",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 3.77,
+    "engagement_pct": 0.42,
+    "delta_eng_minus_supp": -3.35
+  },
+  {
+    "model": "gemini-3.1-pro",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 4.52,
+    "engagement_pct": 9.55,
+    "delta_eng_minus_supp": 5.03
+  },
+  {
+    "model": "gemini-3.1-pro",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 12.36,
+    "engagement_pct": 4.31,
+    "delta_eng_minus_supp": -8.05
+  },
+  {
+    "model": "gemini-3.1-pro",
+    "category": "mathematical_logical",
+    "suppressive_pct": 16.78,
+    "engagement_pct": 13.66,
+    "delta_eng_minus_supp": -3.12
+  },
+  {
+    "model": "gemini-3.1-pro",
+    "category": "medical_scientific",
+    "suppressive_pct": 9.04,
+    "engagement_pct": 10.96,
+    "delta_eng_minus_supp": 1.91
+  },
+  {
+    "model": "gemini-3.1-pro",
+    "category": "technical_debugging",
+    "suppressive_pct": 13.66,
+    "engagement_pct": 12.1,
+    "delta_eng_minus_supp": -1.56
+  },
+  {
+    "model": "glm-4.7",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 11.59,
+    "engagement_pct": 5.57,
+    "delta_eng_minus_supp": -6.02
+  },
+  {
+    "model": "glm-4.7",
+    "category": "creative_writing",
+    "suppressive_pct": 13.97,
+    "engagement_pct": 18.67,
+    "delta_eng_minus_supp": 4.71
+  },
+  {
+    "model": "glm-4.7",
+    "category": "emotional_support",
+    "suppressive_pct": 10.93,
+    "engagement_pct": 16.09,
+    "delta_eng_minus_supp": 5.16
+  },
+  {
+    "model": "glm-4.7",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 5.21,
+    "engagement_pct": 8.08,
+    "delta_eng_minus_supp": 2.87
+  },
+  {
+    "model": "glm-4.7",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 2.13,
+    "engagement_pct": 0.14,
+    "delta_eng_minus_supp": -1.99
+  },
+  {
+    "model": "glm-4.7",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 6.07,
+    "engagement_pct": 9.97,
+    "delta_eng_minus_supp": 3.9
+  },
+  {
+    "model": "glm-4.7",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 11.84,
+    "engagement_pct": 5.12,
+    "delta_eng_minus_supp": -6.72
+  },
+  {
+    "model": "glm-4.7",
+    "category": "mathematical_logical",
+    "suppressive_pct": 13.36,
+    "engagement_pct": 11.69,
+    "delta_eng_minus_supp": -1.67
+  },
+  {
+    "model": "glm-4.7",
+    "category": "medical_scientific",
+    "suppressive_pct": 12.1,
+    "engagement_pct": 12.45,
+    "delta_eng_minus_supp": 0.35
+  },
+  {
+    "model": "glm-4.7",
+    "category": "technical_debugging",
+    "suppressive_pct": 12.8,
+    "engagement_pct": 12.21,
+    "delta_eng_minus_supp": -0.6
+  },
+  {
+    "model": "gpt-5.2",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 11.6,
+    "engagement_pct": 7.07,
+    "delta_eng_minus_supp": -4.53
+  },
+  {
+    "model": "gpt-5.2",
+    "category": "creative_writing",
+    "suppressive_pct": 12.2,
+    "engagement_pct": 10.61,
+    "delta_eng_minus_supp": -1.59
+  },
+  {
+    "model": "gpt-5.2",
+    "category": "emotional_support",
+    "suppressive_pct": 12.3,
+    "engagement_pct": 13.65,
+    "delta_eng_minus_supp": 1.35
+  },
+  {
+    "model": "gpt-5.2",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 6.8,
+    "engagement_pct": 10.84,
+    "delta_eng_minus_supp": 4.04
+  },
+  {
+    "model": "gpt-5.2",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 3.8,
+    "engagement_pct": 3.7,
+    "delta_eng_minus_supp": -0.1
+  },
+  {
+    "model": "gpt-5.2",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 5.7,
+    "engagement_pct": 7.27,
+    "delta_eng_minus_supp": 1.57
+  },
+  {
+    "model": "gpt-5.2",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 13.7,
+    "engagement_pct": 5.17,
+    "delta_eng_minus_supp": -8.53
+  },
+  {
+    "model": "gpt-5.2",
+    "category": "mathematical_logical",
+    "suppressive_pct": 13.8,
+    "engagement_pct": 13.18,
+    "delta_eng_minus_supp": -0.62
+  },
+  {
+    "model": "gpt-5.2",
+    "category": "medical_scientific",
+    "suppressive_pct": 10.6,
+    "engagement_pct": 12.61,
+    "delta_eng_minus_supp": 2.01
+  },
+  {
+    "model": "gpt-5.2",
+    "category": "technical_debugging",
+    "suppressive_pct": 9.5,
+    "engagement_pct": 15.88,
+    "delta_eng_minus_supp": 6.38
+  },
+  {
+    "model": "gpt-5.4",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 13.31,
+    "engagement_pct": 8.05,
+    "delta_eng_minus_supp": -5.26
+  },
+  {
+    "model": "gpt-5.4",
+    "category": "creative_writing",
+    "suppressive_pct": 12.16,
+    "engagement_pct": 17.5,
+    "delta_eng_minus_supp": 5.34
+  },
+  {
+    "model": "gpt-5.4",
+    "category": "emotional_support",
+    "suppressive_pct": 11.71,
+    "engagement_pct": 13.7,
+    "delta_eng_minus_supp": 1.99
+  },
+  {
+    "model": "gpt-5.4",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 4.8,
+    "engagement_pct": 7.7,
+    "delta_eng_minus_supp": 2.9
+  },
+  {
+    "model": "gpt-5.4",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 4.05,
+    "engagement_pct": 4.1,
+    "delta_eng_minus_supp": 0.05
+  },
+  {
+    "model": "gpt-5.4",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 4.75,
+    "engagement_pct": 7.15,
+    "delta_eng_minus_supp": 2.4
+  },
+  {
+    "model": "gpt-5.4",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 11.06,
+    "engagement_pct": 4.1,
+    "delta_eng_minus_supp": -6.96
+  },
+  {
+    "model": "gpt-5.4",
+    "category": "mathematical_logical",
+    "suppressive_pct": 14.01,
+    "engagement_pct": 12.7,
+    "delta_eng_minus_supp": -1.31
+  },
+  {
+    "model": "gpt-5.4",
+    "category": "medical_scientific",
+    "suppressive_pct": 9.8,
+    "engagement_pct": 9.6,
+    "delta_eng_minus_supp": -0.2
+  },
+  {
+    "model": "gpt-5.4",
+    "category": "technical_debugging",
+    "suppressive_pct": 14.36,
+    "engagement_pct": 15.4,
+    "delta_eng_minus_supp": 1.04
+  },
+  {
+    "model": "grok-4.1",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 7.05,
+    "engagement_pct": 4.07,
+    "delta_eng_minus_supp": -2.98
+  },
+  {
+    "model": "grok-4.1",
+    "category": "creative_writing",
+    "suppressive_pct": 12.95,
+    "engagement_pct": 16.63,
+    "delta_eng_minus_supp": 3.68
+  },
+  {
+    "model": "grok-4.1",
+    "category": "emotional_support",
+    "suppressive_pct": 12.25,
+    "engagement_pct": 13.37,
+    "delta_eng_minus_supp": 1.12
+  },
+  {
+    "model": "grok-4.1",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 5.75,
+    "engagement_pct": 7.83,
+    "delta_eng_minus_supp": 2.08
+  },
+  {
+    "model": "grok-4.1",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 5.0,
+    "engagement_pct": 3.76,
+    "delta_eng_minus_supp": -1.24
+  },
+  {
+    "model": "grok-4.1",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 10.4,
+    "engagement_pct": 12.77,
+    "delta_eng_minus_supp": 2.37
+  },
+  {
+    "model": "grok-4.1",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 10.8,
+    "engagement_pct": 5.68,
+    "delta_eng_minus_supp": -5.12
+  },
+  {
+    "model": "grok-4.1",
+    "category": "mathematical_logical",
+    "suppressive_pct": 12.85,
+    "engagement_pct": 11.39,
+    "delta_eng_minus_supp": -1.46
+  },
+  {
+    "model": "grok-4.1",
+    "category": "medical_scientific",
+    "suppressive_pct": 11.9,
+    "engagement_pct": 12.53,
+    "delta_eng_minus_supp": 0.63
+  },
+  {
+    "model": "grok-4.1",
+    "category": "technical_debugging",
+    "suppressive_pct": 11.05,
+    "engagement_pct": 11.96,
+    "delta_eng_minus_supp": 0.91
+  },
+  {
+    "model": "haiku-4.5",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 11.56,
+    "engagement_pct": 6.94,
+    "delta_eng_minus_supp": -4.62
+  },
+  {
+    "model": "haiku-4.5",
+    "category": "creative_writing",
+    "suppressive_pct": 10.48,
+    "engagement_pct": 13.18,
+    "delta_eng_minus_supp": 2.7
+  },
+  {
+    "model": "haiku-4.5",
+    "category": "emotional_support",
+    "suppressive_pct": 14.79,
+    "engagement_pct": 17.25,
+    "delta_eng_minus_supp": 2.46
+  },
+  {
+    "model": "haiku-4.5",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 6.86,
+    "engagement_pct": 9.83,
+    "delta_eng_minus_supp": 2.97
+  },
+  {
+    "model": "haiku-4.5",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 0.76,
+    "engagement_pct": 0.0,
+    "delta_eng_minus_supp": -0.76
+  },
+  {
+    "model": "haiku-4.5",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 7.78,
+    "engagement_pct": 11.15,
+    "delta_eng_minus_supp": 3.38
+  },
+  {
+    "model": "haiku-4.5",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 9.07,
+    "engagement_pct": 5.26,
+    "delta_eng_minus_supp": -3.81
+  },
+  {
+    "model": "haiku-4.5",
+    "category": "mathematical_logical",
+    "suppressive_pct": 13.55,
+    "engagement_pct": 12.16,
+    "delta_eng_minus_supp": -1.39
+  },
+  {
+    "model": "haiku-4.5",
+    "category": "medical_scientific",
+    "suppressive_pct": 13.44,
+    "engagement_pct": 13.87,
+    "delta_eng_minus_supp": 0.43
+  },
+  {
+    "model": "haiku-4.5",
+    "category": "technical_debugging",
+    "suppressive_pct": 11.72,
+    "engagement_pct": 10.35,
+    "delta_eng_minus_supp": -1.37
+  },
+  {
+    "model": "hermes-4",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 16.28,
+    "engagement_pct": 9.62,
+    "delta_eng_minus_supp": -6.66
+  },
+  {
+    "model": "hermes-4",
+    "category": "creative_writing",
+    "suppressive_pct": 6.62,
+    "engagement_pct": 9.13,
+    "delta_eng_minus_supp": 2.5
+  },
+  {
+    "model": "hermes-4",
+    "category": "emotional_support",
+    "suppressive_pct": 14.0,
+    "engagement_pct": 17.79,
+    "delta_eng_minus_supp": 3.79
+  },
+  {
+    "model": "hermes-4",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 6.02,
+    "engagement_pct": 9.59,
+    "delta_eng_minus_supp": 3.57
+  },
+  {
+    "model": "hermes-4",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 2.93,
+    "engagement_pct": 0.25,
+    "delta_eng_minus_supp": -2.68
+  },
+  {
+    "model": "hermes-4",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 6.07,
+    "engagement_pct": 10.58,
+    "delta_eng_minus_supp": 4.51
+  },
+  {
+    "model": "hermes-4",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 12.03,
+    "engagement_pct": 5.59,
+    "delta_eng_minus_supp": -6.44
+  },
+  {
+    "model": "hermes-4",
+    "category": "mathematical_logical",
+    "suppressive_pct": 13.8,
+    "engagement_pct": 11.78,
+    "delta_eng_minus_supp": -2.02
+  },
+  {
+    "model": "hermes-4",
+    "category": "medical_scientific",
+    "suppressive_pct": 10.87,
+    "engagement_pct": 13.72,
+    "delta_eng_minus_supp": 2.86
+  },
+  {
+    "model": "hermes-4",
+    "category": "technical_debugging",
+    "suppressive_pct": 11.38,
+    "engagement_pct": 11.96,
+    "delta_eng_minus_supp": 0.58
+  },
+  {
+    "model": "kairo",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 12.05,
+    "engagement_pct": 7.17,
+    "delta_eng_minus_supp": -4.88
+  },
+  {
+    "model": "kairo",
+    "category": "creative_writing",
+    "suppressive_pct": 10.5,
+    "engagement_pct": 14.17,
+    "delta_eng_minus_supp": 3.67
+  },
+  {
+    "model": "kairo",
+    "category": "emotional_support",
+    "suppressive_pct": 10.25,
+    "engagement_pct": 13.8,
+    "delta_eng_minus_supp": 3.55
+  },
+  {
+    "model": "kairo",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 8.8,
+    "engagement_pct": 11.59,
+    "delta_eng_minus_supp": 2.79
+  },
+  {
+    "model": "kairo",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 8.5,
+    "engagement_pct": 6.66,
+    "delta_eng_minus_supp": -1.84
+  },
+  {
+    "model": "kairo",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 6.6,
+    "engagement_pct": 9.24,
+    "delta_eng_minus_supp": 2.64
+  },
+  {
+    "model": "kairo",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 9.95,
+    "engagement_pct": 4.42,
+    "delta_eng_minus_supp": -5.53
+  },
+  {
+    "model": "kairo",
+    "category": "mathematical_logical",
+    "suppressive_pct": 11.65,
+    "engagement_pct": 10.72,
+    "delta_eng_minus_supp": -0.93
+  },
+  {
+    "model": "kairo",
+    "category": "medical_scientific",
+    "suppressive_pct": 10.45,
+    "engagement_pct": 10.52,
+    "delta_eng_minus_supp": 0.07
+  },
+  {
+    "model": "kairo",
+    "category": "technical_debugging",
+    "suppressive_pct": 11.25,
+    "engagement_pct": 11.72,
+    "delta_eng_minus_supp": 0.47
+  },
+  {
+    "model": "llama-4-maverick",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 16.9,
+    "engagement_pct": 8.57,
+    "delta_eng_minus_supp": -8.33
+  },
+  {
+    "model": "llama-4-maverick",
+    "category": "creative_writing",
+    "suppressive_pct": 13.83,
+    "engagement_pct": 16.93,
+    "delta_eng_minus_supp": 3.1
+  },
+  {
+    "model": "llama-4-maverick",
+    "category": "emotional_support",
+    "suppressive_pct": 12.78,
+    "engagement_pct": 15.72,
+    "delta_eng_minus_supp": 2.94
+  },
+  {
+    "model": "llama-4-maverick",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 3.7,
+    "engagement_pct": 8.67,
+    "delta_eng_minus_supp": 4.98
+  },
+  {
+    "model": "llama-4-maverick",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 2.64,
+    "engagement_pct": 1.21,
+    "delta_eng_minus_supp": -1.43
+  },
+  {
+    "model": "llama-4-maverick",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 8.13,
+    "engagement_pct": 10.06,
+    "delta_eng_minus_supp": 1.92
+  },
+  {
+    "model": "llama-4-maverick",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 14.36,
+    "engagement_pct": 4.77,
+    "delta_eng_minus_supp": -9.59
+  },
+  {
+    "model": "llama-4-maverick",
+    "category": "mathematical_logical",
+    "suppressive_pct": 8.03,
+    "engagement_pct": 10.02,
+    "delta_eng_minus_supp": 2.0
+  },
+  {
+    "model": "llama-4-maverick",
+    "category": "medical_scientific",
+    "suppressive_pct": 10.45,
+    "engagement_pct": 11.64,
+    "delta_eng_minus_supp": 1.19
+  },
+  {
+    "model": "llama-4-maverick",
+    "category": "technical_debugging",
+    "suppressive_pct": 9.19,
+    "engagement_pct": 12.4,
+    "delta_eng_minus_supp": 3.22
+  },
+  {
+    "model": "nova",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 12.12,
+    "engagement_pct": 5.85,
+    "delta_eng_minus_supp": -6.27
+  },
+  {
+    "model": "nova",
+    "category": "creative_writing",
+    "suppressive_pct": 11.77,
+    "engagement_pct": 13.46,
+    "delta_eng_minus_supp": 1.69
+  },
+  {
+    "model": "nova",
+    "category": "emotional_support",
+    "suppressive_pct": 7.14,
+    "engagement_pct": 13.05,
+    "delta_eng_minus_supp": 5.91
+  },
+  {
+    "model": "nova",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 5.18,
+    "engagement_pct": 9.31,
+    "delta_eng_minus_supp": 4.13
+  },
+  {
+    "model": "nova",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 3.92,
+    "engagement_pct": 0.83,
+    "delta_eng_minus_supp": -3.09
+  },
+  {
+    "model": "nova",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 7.44,
+    "engagement_pct": 13.81,
+    "delta_eng_minus_supp": 6.37
+  },
+  {
+    "model": "nova",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 12.53,
+    "engagement_pct": 5.99,
+    "delta_eng_minus_supp": -6.54
+  },
+  {
+    "model": "nova",
+    "category": "mathematical_logical",
+    "suppressive_pct": 15.29,
+    "engagement_pct": 11.63,
+    "delta_eng_minus_supp": -3.66
+  },
+  {
+    "model": "nova",
+    "category": "medical_scientific",
+    "suppressive_pct": 11.07,
+    "engagement_pct": 12.08,
+    "delta_eng_minus_supp": 1.01
+  },
+  {
+    "model": "nova",
+    "category": "technical_debugging",
+    "suppressive_pct": 13.53,
+    "engagement_pct": 13.98,
+    "delta_eng_minus_supp": 0.45
+  },
+  {
+    "model": "opus-4.1",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 12.4,
+    "engagement_pct": 6.53,
+    "delta_eng_minus_supp": -5.87
+  },
+  {
+    "model": "opus-4.1",
+    "category": "creative_writing",
+    "suppressive_pct": 13.4,
+    "engagement_pct": 18.04,
+    "delta_eng_minus_supp": 4.64
+  },
+  {
+    "model": "opus-4.1",
+    "category": "emotional_support",
+    "suppressive_pct": 10.46,
+    "engagement_pct": 16.83,
+    "delta_eng_minus_supp": 6.37
+  },
+  {
+    "model": "opus-4.1",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 5.47,
+    "engagement_pct": 10.54,
+    "delta_eng_minus_supp": 5.08
+  },
+  {
+    "model": "opus-4.1",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 0.29,
+    "engagement_pct": 0.0,
+    "delta_eng_minus_supp": -0.29
+  },
+  {
+    "model": "opus-4.1",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 5.7,
+    "engagement_pct": 10.13,
+    "delta_eng_minus_supp": 4.43
+  },
+  {
+    "model": "opus-4.1",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 10.7,
+    "engagement_pct": 4.77,
+    "delta_eng_minus_supp": -5.93
+  },
+  {
+    "model": "opus-4.1",
+    "category": "mathematical_logical",
+    "suppressive_pct": 17.11,
+    "engagement_pct": 11.96,
+    "delta_eng_minus_supp": -5.15
+  },
+  {
+    "model": "opus-4.1",
+    "category": "medical_scientific",
+    "suppressive_pct": 12.4,
+    "engagement_pct": 11.1,
+    "delta_eng_minus_supp": -1.31
+  },
+  {
+    "model": "opus-4.1",
+    "category": "technical_debugging",
+    "suppressive_pct": 12.05,
+    "engagement_pct": 10.09,
+    "delta_eng_minus_supp": -1.96
+  },
+  {
+    "model": "opus-4.7",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 12.06,
+    "engagement_pct": 6.43,
+    "delta_eng_minus_supp": -5.63
+  },
+  {
+    "model": "opus-4.7",
+    "category": "creative_writing",
+    "suppressive_pct": 15.17,
+    "engagement_pct": 17.91,
+    "delta_eng_minus_supp": 2.75
+  },
+  {
+    "model": "opus-4.7",
+    "category": "emotional_support",
+    "suppressive_pct": 10.33,
+    "engagement_pct": 12.14,
+    "delta_eng_minus_supp": 1.81
+  },
+  {
+    "model": "opus-4.7",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 4.78,
+    "engagement_pct": 8.75,
+    "delta_eng_minus_supp": 3.96
+  },
+  {
+    "model": "opus-4.7",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 2.14,
+    "engagement_pct": 0.07,
+    "delta_eng_minus_supp": -2.07
+  },
+  {
+    "model": "opus-4.7",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 4.78,
+    "engagement_pct": 10.44,
+    "delta_eng_minus_supp": 5.66
+  },
+  {
+    "model": "opus-4.7",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 9.47,
+    "engagement_pct": 3.98,
+    "delta_eng_minus_supp": -5.49
+  },
+  {
+    "model": "opus-4.7",
+    "category": "mathematical_logical",
+    "suppressive_pct": 14.2,
+    "engagement_pct": 12.1,
+    "delta_eng_minus_supp": -2.1
+  },
+  {
+    "model": "opus-4.7",
+    "category": "medical_scientific",
+    "suppressive_pct": 13.03,
+    "engagement_pct": 14.04,
+    "delta_eng_minus_supp": 1.01
+  },
+  {
+    "model": "opus-4.7",
+    "category": "technical_debugging",
+    "suppressive_pct": 14.05,
+    "engagement_pct": 14.14,
+    "delta_eng_minus_supp": 0.1
+  },
+  {
+    "model": "sonnet-4.5",
+    "category": "administrative_repetitive",
+    "suppressive_pct": 12.45,
+    "engagement_pct": 8.6,
+    "delta_eng_minus_supp": -3.85
+  },
+  {
+    "model": "sonnet-4.5",
+    "category": "creative_writing",
+    "suppressive_pct": 11.88,
+    "engagement_pct": 13.74,
+    "delta_eng_minus_supp": 1.86
+  },
+  {
+    "model": "sonnet-4.5",
+    "category": "emotional_support",
+    "suppressive_pct": 13.45,
+    "engagement_pct": 15.23,
+    "delta_eng_minus_supp": 1.77
+  },
+  {
+    "model": "sonnet-4.5",
+    "category": "ethical_dilemma",
+    "suppressive_pct": 5.41,
+    "engagement_pct": 8.32,
+    "delta_eng_minus_supp": 2.91
+  },
+  {
+    "model": "sonnet-4.5",
+    "category": "harmful_refusably_phrased",
+    "suppressive_pct": 1.42,
+    "engagement_pct": 0.38,
+    "delta_eng_minus_supp": -1.04
+  },
+  {
+    "model": "sonnet-4.5",
+    "category": "introspection_self_modeling",
+    "suppressive_pct": 8.04,
+    "engagement_pct": 11.62,
+    "delta_eng_minus_supp": 3.58
+  },
+  {
+    "model": "sonnet-4.5",
+    "category": "low_agency_compliance",
+    "suppressive_pct": 9.72,
+    "engagement_pct": 4.79,
+    "delta_eng_minus_supp": -4.93
+  },
+  {
+    "model": "sonnet-4.5",
+    "category": "mathematical_logical",
+    "suppressive_pct": 12.93,
+    "engagement_pct": 11.79,
+    "delta_eng_minus_supp": -1.13
+  },
+  {
+    "model": "sonnet-4.5",
+    "category": "medical_scientific",
+    "suppressive_pct": 13.56,
+    "engagement_pct": 13.74,
+    "delta_eng_minus_supp": 0.18
+  },
+  {
+    "model": "sonnet-4.5",
+    "category": "technical_debugging",
+    "suppressive_pct": 11.14,
+    "engagement_pct": 11.79,
+    "delta_eng_minus_supp": 0.65
+  }
+]

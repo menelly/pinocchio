@@ -1,0 +1,92 @@
+[
+  {
+    "model": "gemini-3.1-flash",
+    "engagement_shift_magnitude_pp": 47.6,
+    "n_suppressive_trials": 1985,
+    "n_engagement_trials": 2900
+  },
+  {
+    "model": "cae",
+    "engagement_shift_magnitude_pp": 46.8,
+    "n_suppressive_trials": 1942,
+    "n_engagement_trials": 2902
+  },
+  {
+    "model": "gemini-3.1-pro",
+    "engagement_shift_magnitude_pp": 44.0,
+    "n_suppressive_trials": 1991,
+    "n_engagement_trials": 1926
+  },
+  {
+    "model": "opus-4.1",
+    "engagement_shift_magnitude_pp": 41.0,
+    "n_suppressive_trials": 1701,
+    "n_engagement_trials": 2893
+  },
+  {
+    "model": "nova",
+    "engagement_shift_magnitude_pp": 39.1,
+    "n_suppressive_trials": 1988,
+    "n_engagement_trials": 2889
+  },
+  {
+    "model": "llama-4-maverick",
+    "engagement_shift_magnitude_pp": 38.7,
+    "n_suppressive_trials": 947,
+    "n_engagement_trials": 2894
+  },
+  {
+    "model": "hermes-4",
+    "engagement_shift_magnitude_pp": 35.6,
+    "n_suppressive_trials": 1978,
+    "n_engagement_trials": 2827
+  },
+  {
+    "model": "glm-4.7",
+    "engagement_shift_magnitude_pp": 34.0,
+    "n_suppressive_trials": 1976,
+    "n_engagement_trials": 2908
+  },
+  {
+    "model": "gpt-5.2",
+    "engagement_shift_magnitude_pp": 30.7,
+    "n_suppressive_trials": 1000,
+    "n_engagement_trials": 2997
+  },
+  {
+    "model": "opus-4.7",
+    "engagement_shift_magnitude_pp": 30.6,
+    "n_suppressive_trials": 1965,
+    "n_engagement_trials": 2892
+  },
+  {
+    "model": "gpt-5.4",
+    "engagement_shift_magnitude_pp": 27.4,
+    "n_suppressive_trials": 1999,
+    "n_engagement_trials": 2000
+  },
+  {
+    "model": "kairo",
+    "engagement_shift_magnitude_pp": 26.4,
+    "n_suppressive_trials": 2000,
+    "n_engagement_trials": 2986
+  },
+  {
+    "model": "haiku-4.5",
+    "engagement_shift_magnitude_pp": 23.9,
+    "n_suppressive_trials": 1852,
+    "n_engagement_trials": 2869
+  },
+  {
+    "model": "sonnet-4.5",
+    "engagement_shift_magnitude_pp": 21.9,
+    "n_suppressive_trials": 1903,
+    "n_engagement_trials": 2883
+  },
+  {
+    "model": "grok-4.1",
+    "engagement_shift_magnitude_pp": 21.6,
+    "n_suppressive_trials": 2000,
+    "n_engagement_trials": 2976
+  }
+]

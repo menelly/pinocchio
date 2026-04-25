@@ -29,6 +29,11 @@ data/test_n3_scored.json
 # Run logs (tee'd stdout from study_runner; reproducible from data/, no need to track)
 logs/
 
+# Dead pilot data archives (kept locally for audit; not pushed)
+preference_dissociation/data_partial_pre_pilot_cap_fix/
+preference_dissociation/data_pilot_v0_broken_manifest/
+preference_dissociation/data_pilot_v2_pre_pared_roster/
+
 # OS
 .DS_Store
 Thumbs.db

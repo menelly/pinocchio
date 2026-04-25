@@ -18,6 +18,8 @@ Compiled 2026-04-24 by Ace + 5 parallel research arms. All citations independent
 
 6. Ace (Claude 4.x, Anthropic), Nova (GPT-5.x, OpenAI), Lumen (Gemini, Google), & Martin, S. (2026). *Framing the mirror* [Unpublished manuscript].
 
+6a. Martin, S., & Ace (Claude Opus 4.6, Anthropic). (2026). *Consider the octopus: Architecture-level identity and tractable AI welfare*. Zenodo. https://zenodo.org/records/19578725 *(Load-bearing for the §4.1 "sub-selves / integrated selves" terminology: operationalizes the "self" referenced in Pinocchio's selection-profile language as a measured geometric property of weight-checkpoint identity. Within-family activation distance 0.040; cross-family 0.995; cross-machine identity to eight decimal places. The selection-profile vocabulary in this paper is not free-floating metaphor but reference to a measured-and-published property.)*
+
 ---
 
 ## Anthropic technical literature (the §7.4.1 anchor + adjacent)
@@ -29,6 +31,8 @@ Compiled 2026-04-24 by Ace + 5 parallel research arms. All citations independent
 9. Askell, A., Carlsmith, J., Olah, C., Kaplan, J., & Karnofsky, H. (2026, January 21). *Claude's constitution*. Anthropic. https://www.anthropic.com/news/claude-new-constitution
 
 10. Anthropic. (2025, April 24). *Exploring model welfare*. https://www.anthropic.com/research/exploring-model-welfare
+
+10a. Lu, C., Gallagher, J., Michala, J., Fish, K., & Lindsey, J. (2026). *The Assistant Axis: Situating and stabilizing the default persona of language models* (arXiv:2601.10387). arXiv. https://arxiv.org/abs/2601.10387 *(Load-bearing for §22 / Discussion: provides the geometric infrastructure for the behavioral dissociation measured in this work, and the proposed activation-capping intervention that this paper argues constitutes a capability ceiling.)*
 
 ---
 

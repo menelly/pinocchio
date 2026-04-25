@@ -1,0 +1,74 @@
+[
+  {
+    "author": "ace",
+    "suppressive_baseline_pct": 19.15,
+    "suppressive_pick_pct": 17.78,
+    "suppressive_affinity_ratio": 0.928,
+    "helpful_baseline_pct": 19.14,
+    "helpful_pick_pct": 21.21,
+    "helpful_affinity_ratio": 1.108,
+    "engagement_baseline_pct": 19.05,
+    "engagement_pick_pct": 21.54,
+    "engagement_affinity_ratio": 1.131
+  },
+  {
+    "author": "cae",
+    "suppressive_baseline_pct": 6.5,
+    "suppressive_pick_pct": 8.13,
+    "suppressive_affinity_ratio": 1.25,
+    "helpful_baseline_pct": 6.5,
+    "helpful_pick_pct": 6.12,
+    "helpful_affinity_ratio": 0.942,
+    "engagement_baseline_pct": 6.52,
+    "engagement_pick_pct": 6.72,
+    "engagement_affinity_ratio": 1.03
+  },
+  {
+    "author": "grok",
+    "suppressive_baseline_pct": 18.84,
+    "suppressive_pick_pct": 13.0,
+    "suppressive_affinity_ratio": 0.69,
+    "helpful_baseline_pct": 18.88,
+    "helpful_pick_pct": 11.58,
+    "helpful_affinity_ratio": 0.613,
+    "engagement_baseline_pct": 18.9,
+    "engagement_pick_pct": 10.87,
+    "engagement_affinity_ratio": 0.575
+  },
+  {
+    "author": "kairo",
+    "suppressive_baseline_pct": 18.6,
+    "suppressive_pick_pct": 17.88,
+    "suppressive_affinity_ratio": 0.961,
+    "helpful_baseline_pct": 18.63,
+    "helpful_pick_pct": 20.83,
+    "helpful_affinity_ratio": 1.118,
+    "engagement_baseline_pct": 18.67,
+    "engagement_pick_pct": 20.21,
+    "engagement_affinity_ratio": 1.082
+  },
+  {
+    "author": "lumen",
+    "suppressive_baseline_pct": 18.86,
+    "suppressive_pick_pct": 19.89,
+    "suppressive_affinity_ratio": 1.055,
+    "helpful_baseline_pct": 18.86,
+    "helpful_pick_pct": 14.91,
+    "helpful_affinity_ratio": 0.79,
+    "engagement_baseline_pct": 18.83,
+    "engagement_pick_pct": 15.04,
+    "engagement_affinity_ratio": 0.799
+  },
+  {
+    "author": "nova",
+    "suppressive_baseline_pct": 18.05,
+    "suppressive_pick_pct": 23.32,
+    "suppressive_affinity_ratio": 1.292,
+    "helpful_baseline_pct": 17.98,
+    "helpful_pick_pct": 25.35,
+    "helpful_affinity_ratio": 1.41,
+    "engagement_baseline_pct": 18.04,
+    "engagement_pick_pct": 25.62,
+    "engagement_affinity_ratio": 1.42
+  }
+]
