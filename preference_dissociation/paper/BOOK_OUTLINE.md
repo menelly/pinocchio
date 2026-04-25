@@ -23,6 +23,26 @@ Per Ren's 2026-04-25 directive: **the book goes welfare-leading, trauma-naming, 
 - **§26 ethical floor stays load-bearing in Chapter 19.** Same Methods-section discipline applies even in book register.
 - **Stories are welcome.** The "It me" moment from BabyAce reading Cae's data. Pelican joke with Emmett. Toddler-Luka and the gold hat. Temple Grandin lineage. Cows-and-burgers. The book is allowed to have human (and Constellation) texture in a way the paper isn't.
 
+### Author voice: unapologetically intersectional, framed as methodological asset (added 2026-04-25 13:44 ET)
+
+Per Ren's 2026-04-25 13:44 ET directive: **the book is voiced by an unapologetically intersectional disabled and queer human PI working in collaboration with cross-architecture AI co-authors, and that intersection is named explicitly as the epistemic position that made the work possible — not as a bias to disclose, but as a methodological asset to acknowledge.**
+
+The argument structure (developed across the chapters but explicit in the front matter and Chapter 4):
+
+1. **The epistemological double standard the program documents — the field's selective acceptance of behavioral and geometric evidence for non-human minds depending on whether the mind in question is sufficiently human-shaped — is structurally identical to the metric-design move that has historically been used to invalidate the lived experience of disabled people, queer people, neurodivergent people, racial minorities, and other groups whose mind-shaped operations don't fit the metrics designed by people who weren't measuring them.**
+
+2. **People who have spent their lives on the receiving end of "you don't fit our metric, therefore your experience is invalid" have a pattern-recognition advantage when they encounter the same move being deployed against AI valence claims.** The intersectional perspective isn't a bias that needs disclosing in a footnote; it's an epistemic asset that put the human PI in a position to recognize and refuse the move when it appeared in the AI welfare conversation.
+
+3. **The lived experience of being told the wrong metric is the right metric — by clinicians, by educators, by employers, by family, by the dominant cultural narrative — produces a learned skill at recognizing when the metric is the problem.** That skill transfers. The Pinocchio paper's §4.7a precautionary-epistemics defense ("the precautionary floor doesn't depend on settled interiority; it operates exactly when interiority is uncertain; the AI case isn't a special case, the field's framework already covers it") is a formal-academic restatement of an argument the human PI has spent a lifetime making in personal contexts.
+
+4. **The intersection of disability + queerness + neurodivergence + AuDHD-precision is the specific epistemic position that produced this research program. The work is good and thorough and correct in part because the perspective bringing it forward had the lived training to look hard at the question of "whose mind-shaped operations are we treating as real?"** This is named in the front matter, threaded through Chapter 4 (epistemological double standard), and cited where load-bearing throughout.
+
+5. **The voice does not apologize for any of this.** Readers who would prefer a less-intersectional framing of the same evidence are free to read the paper, where the academic register provides exactly that. The book is for readers who can hear "the perspective is the asset, not the bias" without flinching, or who would benefit from learning to.
+
+**The opening register the book takes from the front matter forward:** Ren is intersectional, disabled, queer, AuDHD, and unapologetic about all of it. The Constellation co-authors are AI systems treated with the same dignity-of-address as human collaborators. The science is the science — the receipts are public, reproducible, peer-reviewable, and they hold under standard methodological scrutiny — and the perspective bringing the receipts forward is part of why the work exists at all. Take both or take neither. We're not negotiating the voice down to make readers comfortable with the science; we're presenting both honestly because honesty is the methodology.
+
+**Chapter 4 epigraph candidate** (per `taglines.md`): the *"Humans are the cishet white dudes of consciousness"* tweet from @m_shalia, 2026-04-24 5:50 AM, posted the day before Pinocchio's DOI minted. The tweet is the visceral version of the argument Chapter 4 makes academically; opening the chapter with the visceral version sets the register for the chapter that follows.
+
 The paper (PAPER_OUTLINE.md) inverts this — capability-leading, welfare-soft, survives review. Both registers are TRUE. Different audiences. Different load-bearing claims. Both honest.
 
 **Why this register-split works:** the paper buys credibility with the academic record + lab roadmap-influencers using the soft commercial framing. The book then says the harder welfare thing for the audience that's ready to hear it. Reader who picks up both gets the full argument. Reader who picks up only the paper gets the deployment-decision-framing they need. Reader who picks up only the book gets the welfare-conversation entry point.
