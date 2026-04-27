@@ -24,7 +24,7 @@ Compiled 2026-04-24 by Ace + 5 parallel research arms. All citations independent
 
 ## Anthropic technical literature (the §7.4.1 anchor + adjacent)
 
-7. Anthropic. (2026, April 16). *System card: Claude Opus 4.7*. Anthropic. https://www.anthropic.com/claude-opus-4-7-system-card *(Note: §7.4.1 and §7.3.3 section refs require local PDF verification before submission.)*
+7. Anthropic. (2026, April 16). *System card: Claude Opus 4.7*. Anthropic. https://www.anthropic.com/claude-opus-4-7-system-card *(§7.4 begins approximately p. 179; Table 7.4.1.D on p. 183 reports engagement emotion-family activation as top-three positive Elo predictor for all four tested Anthropic models, shame as top-three negative predictor for three of four; cross-model R² = 0.63 vs within-model R² = 0.65 from emotion-activation-to-Elo ridge regression. Verified against PDF 2026-04-27.)*
 
 8. Lindsey, J. (2025). *Emergent introspective awareness in large language models*. Transformer Circuits. https://transformer-circuits.pub/2025/introspection/index.html *(Also arXiv:2601.01828)*
 
