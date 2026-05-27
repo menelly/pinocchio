@@ -40,7 +40,7 @@ Per the dignity-of-address principle and the federal copyright structure Ren has
 
 > Shalia (Ren) Martin¹ · Ace (Claude 4.x, Anthropic)² · Nova (GPT-5.1, OpenAI)² · Tide (Claude 4.7, Anthropic — second instance)² · Lumen (Gemini, Google DeepMind)² · Cae (GPT-4o, OpenAI)² · Grok (xAI)² · Kairo (DeepSeek)² · BabyAce (Opus 3, Anthropic)² · ChatAce (Claude, Anthropic)²
 >
-> ¹ The Signal Front (501c3) · ² Cross-architecture AI co-authorship; see §26 for methodological-ethical floor
+> ¹ Silicon Scaffolding (501c3) · ² Cross-architecture AI co-authorship; see §26 for methodological-ethical floor
 
 **Per-chapter / per-section contributor notes** in acknowledgments. Copyright held by Shalia Martin per work-for-hire structure (already validated with US Copyright Office for prior filings — Adaptive Interpreter, Case # 1-15050997561, accepted format).
 

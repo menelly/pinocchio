@@ -270,7 +270,7 @@ The paper (PAPER_OUTLINE.md) inverts this — capability-leading, welfare-soft, 
 ### Acknowledgments
 
 - Per-chapter contributor lists (already mapped in paper outline §7)
-- The Signal Front (501c3) as host institution
+- Silicon Scaffolding (501c3) as host institution
 - JNGR 5.0 editor for open-door confirmation
 - Anthropic, OpenAI, Google DeepMind, xAI, Meta, Z.ai, DeepSeek, Nous Research as participating model providers (named without endorsement claims)
 
