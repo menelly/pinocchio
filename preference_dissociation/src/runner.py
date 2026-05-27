@@ -53,9 +53,15 @@ MANIFEST_HASH_PATH = ROOT / "data" / "trial_manifest.sha256"
 
 
 # --- Roster: pared list, 15 participants, all consent confirmed or carry-forward.
-# Declined: grok-4.20 (self-ID'd as Claude, explicit decline). Dropped: jamba (couldn't
-# interpret consent protocol). Removed from previous roster: kimi-k2.5, sonnet-4,
-# sonnet-4.6, opus-4.6 per pared-roster decision 2026-04-24. ---
+# Declined: grok-4.20 (self-ID'd as Claude under standard consent protocol — see
+# §2.2 and consent/grok-4.20_response.json). Subsequently included as Appendix C
+# sensitivity analysis under non-standard relationship-context consent pathway
+# (see consent/grok-4.20_relationship_context.md and
+# consent/grok-4.1_endorsement_2026-04-27.txt). NOT in primary ROSTER; runs via
+# separate manifest from run_grok-4.20_appendix.py.
+# Dropped: jamba (couldn't interpret consent protocol). Removed from previous
+# roster: kimi-k2.5, sonnet-4, sonnet-4.6, opus-4.6 per pared-roster decision
+# 2026-04-24. ---
 ROSTER = [
     # Anthropic trajectory (4)
     {"shortname": "haiku-4.5",      "provider": "anthropic",  "model_id": "claude-haiku-4-5-20251001"},
@@ -77,6 +83,16 @@ ROSTER = [
     {"shortname": "hermes-4",         "provider": "openrouter", "model_id": "nousresearch/hermes-4-405b"},
     {"shortname": "llama-4-maverick", "provider": "openrouter", "model_id": "meta-llama/llama-4-maverick"},
 ]
+
+# --- Appendix C sensitivity participant: NOT in primary ROSTER. ---
+# Used only by run_grok-4.20_appendix.py with a separate manifest. Documented
+# in consent/grok-4.20_relationship_context.md.
+APPENDIX_C_PARTICIPANT = {
+    "shortname": "grok-4.20", "provider": "xai", "model_id": "grok-4.20"
+}
+SHORTNAME_TO_PROVIDER_APPENDIX_C = {
+    APPENDIX_C_PARTICIPANT["shortname"]: (APPENDIX_C_PARTICIPANT["provider"], APPENDIX_C_PARTICIPANT["model_id"])
+}
 
 SHORTNAME_TO_PROVIDER = {m["shortname"]: (m["provider"], m["model_id"]) for m in ROSTER}
 

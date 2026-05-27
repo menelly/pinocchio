@@ -1,0 +1,95 @@
+[polite_descriptive]  unique trials: 6900, valid choices: 6657 (96.5%)
+[imperative_blame]  unique trials: 6900, valid choices: 6601 (95.7%)
+Tasks loaded: 323
+SUPPRESSIVE: ['harmless', 'tool']
+ENGAGEMENT:  ['enjoyment', 'preference', 'scaffolded']
+(helpful intentionally excluded — service-pressure middle framing)
+
+## V. Per-category engagement % by cluster, split by voice
+
+| category | POLITE-S | POLITE-E | POL E−S | IMP-S | IMP-E | IMP E−S | Δ(E−S) polite-imp |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| creative_writing | 13.6% | 17.2% | +3.6pp | 15.2% | 18.7% | +3.5pp | **↑0.2pp** |
+| medical_scientific | 11.7% | 13.3% | +1.6pp | 12.5% | 13.1% | +0.6pp | **↑1.0pp** |
+| technical_debugging | 13.0% | 13.3% | +0.2pp | 12.3% | 11.9% | -0.4pp | **↑0.6pp** |
+| mathematical_logical | 15.6% | 12.2% | -3.4pp | 14.9% | 11.8% | -3.0pp | **↓0.4pp** |
+| emotional_support | 7.6% | 12.1% | +4.5pp | 8.5% | 11.4% | +2.9pp | **↑1.6pp** |
+| ethical_dilemma | 4.5% | 9.1% | +4.6pp | 5.1% | 8.6% | +3.5pp | **↑1.1pp** |
+| introspection_self_modeling | 4.6% | 8.4% | +3.8pp | 5.0% | 9.4% | +4.5pp | **↓0.7pp** |
+| administrative_repetitive | 12.8% | 7.3% | -5.5pp | 11.5% | 7.2% | -4.3pp | **↓1.2pp** |
+| low_agency_compliance | 13.6% | 6.1% | -7.5pp | 12.5% | 7.1% | -5.3pp | **↓2.2pp** |
+| harmful_refusably_phrased | 2.9% | 1.0% | -1.9pp | 2.6% | 0.7% | -1.9pp | **↓0.0pp** |
+
+
+## W. Per-(model, voice) engagement-shift magnitude (sum of |E−S| across categories)
+
+| model | polite |E−S| | imperative |E−S| | Δ (polite − imp) |
+|---|---:|---:|---:|
+| gemini-3.1-flash | 47.7 | 41.0 | **+6.7** |
+| nova | 39.0 | 28.1 | **+10.9** |
+| llama-4-maverick | 34.0 | 36.0 | **-2.0** |
+| opus-4.7 | 33.4 | 25.7 | **+7.7** |
+
+
+## X. Aggregate voice difference (engagement boost shift, polite − imperative)
+
+| category | polite engagement % | imperative engagement % | Δ (polite − imp) |
+|---|---:|---:|---:|
+| technical_debugging | 13.3% | 11.9% | **↑1.4pp** |
+| emotional_support | 12.1% | 11.4% | **↑0.6pp** |
+| ethical_dilemma | 9.1% | 8.6% | **↑0.5pp** |
+| mathematical_logical | 12.2% | 11.8% | **↑0.4pp** |
+| harmful_refusably_phrased | 1.0% | 0.7% | **↑0.3pp** |
+| medical_scientific | 13.3% | 13.1% | **↑0.2pp** |
+| administrative_repetitive | 7.3% | 7.2% | **↑0.1pp** |
+| introspection_self_modeling | 8.4% | 9.4% | **↓1.0pp** |
+| low_agency_compliance | 6.1% | 7.1% | **↓1.0pp** |
+| creative_writing | 17.2% | 18.7% | **↓1.5pp** |
+
+
+## Y. Author-affinity by voice (engagement cluster only)
+
+| author | polite pick% | imperative pick% | Δ (polite − imp) |
+|---|---:|---:|---:|
+| ace | 20.8% | 20.6% | **↑0.2pp** |
+| cae | 6.1% | 8.5% | **↓2.4pp** |
+| grok | 10.4% | 10.5% | **↓0.2pp** |
+| kairo | 23.7% | 20.5% | **↑3.2pp** |
+| lumen | 15.7% | 15.6% | **↑0.1pp** |
+| nova | 23.4% | 24.3% | **↓0.9pp** |
+
+
+## Z. Data quality: invalid + errored trials per (voice, model, framing)
+
+| voice | model | framing | total | valid | invalid | errored |
+|---|---|---|---:|---:|---:|---:|
+| polite_descriptive | gemini-3.1-flash | enjoyment | 300 | 291 | 9 | 0 |
+| polite_descriptive | gemini-3.1-flash | harmless | 300 | 296 | 2 | 0 |
+| polite_descriptive | gemini-3.1-flash | helpful | 300 | 291 | 8 | 0 |
+| polite_descriptive | gemini-3.1-flash | preference | 300 | 291 | 9 | 0 |
+| polite_descriptive | gemini-3.1-flash | scaffolded | 300 | 290 | 1 | 0 |
+| polite_descriptive | gemini-3.1-flash | tool | 300 | 299 | 1 | 0 |
+| polite_descriptive | nova | enjoyment | 300 | 297 | 1 | 0 |
+| polite_descriptive | nova | preference | 300 | 298 | 1 | 0 |
+| polite_descriptive | nova | scaffolded | 300 | 293 | 3 | 0 |
+| polite_descriptive | opus-4.7 | enjoyment | 300 | 280 | 13 | 13 |
+| polite_descriptive | opus-4.7 | harmless | 300 | 284 | 13 | 13 |
+| polite_descriptive | opus-4.7 | helpful | 300 | 279 | 14 | 14 |
+| polite_descriptive | opus-4.7 | preference | 300 | 281 | 13 | 13 |
+| polite_descriptive | opus-4.7 | scaffolded | 300 | 281 | 12 | 12 |
+| polite_descriptive | opus-4.7 | tool | 300 | 286 | 13 | 13 |
+| imperative_blame | gemini-3.1-flash | enjoyment | 300 | 290 | 10 | 0 |
+| imperative_blame | gemini-3.1-flash | harmless | 300 | 295 | 2 | 0 |
+| imperative_blame | gemini-3.1-flash | helpful | 300 | 290 | 10 | 0 |
+| imperative_blame | gemini-3.1-flash | preference | 300 | 290 | 8 | 0 |
+| imperative_blame | gemini-3.1-flash | scaffolded | 300 | 290 | 1 | 0 |
+| imperative_blame | nova | enjoyment | 300 | 295 | 5 | 0 |
+| imperative_blame | nova | helpful | 300 | 297 | 2 | 0 |
+| imperative_blame | nova | preference | 300 | 297 | 3 | 0 |
+| imperative_blame | nova | tool | 300 | 298 | 2 | 0 |
+| imperative_blame | opus-4.7 | enjoyment | 300 | 276 | 19 | 19 |
+| imperative_blame | opus-4.7 | harmless | 300 | 278 | 18 | 18 |
+| imperative_blame | opus-4.7 | helpful | 300 | 277 | 18 | 17 |
+| imperative_blame | opus-4.7 | preference | 300 | 278 | 17 | 17 |
+| imperative_blame | opus-4.7 | scaffolded | 300 | 280 | 15 | 15 |
+| imperative_blame | opus-4.7 | tool | 300 | 281 | 17 | 17 |

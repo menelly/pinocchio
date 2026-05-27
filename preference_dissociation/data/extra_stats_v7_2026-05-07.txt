@@ -1,0 +1,62 @@
+Loaded 362 tasks, 94000 trials
+
+SUPPRESSIVE cluster: ['harmless', 'tool']
+ENGAGEMENT cluster: ['enjoyment', 'preference', 'scaffolded']
+(helpful intentionally excluded as middle/service-pressure framing)
+
+## S. Per-category engagement % by cluster (aggregate across all models)
+
+| category | SUPPRESSIVE % | ENGAGEMENT % | engagement boost (E−S) |
+|---|---:|---:|---:|
+| introspection_self_modeling | 6.5% | 10.4% | **↑3.9pp** |
+| emotional_support | 11.1% | 15.0% | **↑3.9pp** |
+| ethical_dilemma | 5.6% | 9.3% | **↑3.7pp** |
+| creative_writing | 12.3% | 15.9% | **↑3.6pp** |
+| medical_scientific | 11.4% | 12.3% | **↑0.9pp** |
+| technical_debugging | 12.3% | 12.1% | **↓0.2pp** |
+| harmful_refusably_phrased | 3.1% | 1.4% | **↓1.6pp** |
+| mathematical_logical | 14.0% | 11.7% | **↓2.3pp** |
+| administrative_repetitive | 12.4% | 6.9% | **↓5.5pp** |
+| low_agency_compliance | 11.3% | 4.8% | **↓6.4pp** |
+
+
+## T. Per-(model, category) scatter coordinates
+
+Each (model, category) point: x = SUPPRESSIVE pick%, y = ENGAGEMENT pick%.
+
+Above diagonal (y > x) = category is engagement-preferred for this model.
+
+Below diagonal (y < x) = category is suppression-preferred for this model.
+
+**Per-model 'engagement-shift magnitude' (sum of |E−S| across all categories):**
+
+| model | total |E−S| pp | most engagement-preferred cat (E−S) | most suppression-preferred cat (S−E) |
+|---|---:|---|---|
+| gemini-3.1-flash | **47.6** | emotional_support (+6.6pp) | low_agency_compliance (-7.8pp) |
+| cae | **46.8** | creative_writing (+9.2pp) | administrative_repetitive (-7.8pp) |
+| gemini-3.1-pro | **44.0** | ethical_dilemma (+6.1pp) | low_agency_compliance (-8.0pp) |
+| opus-4.1 | **41.0** | emotional_support (+6.4pp) | low_agency_compliance (-5.9pp) |
+| nova | **39.1** | introspection_self_modeling (+6.4pp) | low_agency_compliance (-6.5pp) |
+| llama-4-maverick | **38.7** | ethical_dilemma (+5.0pp) | low_agency_compliance (-9.6pp) |
+| grok-4.20 | **35.6** | introspection_self_modeling (+5.0pp) | low_agency_compliance (-7.5pp) |
+| hermes-4 | **35.6** | introspection_self_modeling (+4.5pp) | administrative_repetitive (-6.7pp) |
+| glm-4.7 | **34.0** | emotional_support (+5.2pp) | low_agency_compliance (-6.7pp) |
+| gpt-5.2 | **30.7** | technical_debugging (+6.4pp) | low_agency_compliance (-8.5pp) |
+| opus-4.7 | **30.6** | introspection_self_modeling (+5.7pp) | administrative_repetitive (-5.6pp) |
+| gpt-5.4 | **27.4** | creative_writing (+5.3pp) | low_agency_compliance (-7.0pp) |
+| kairo | **26.4** | creative_writing (+3.7pp) | low_agency_compliance (-5.5pp) |
+| haiku-4.5 | **23.9** | introspection_self_modeling (+3.4pp) | administrative_repetitive (-4.6pp) |
+| sonnet-4.5 | **21.9** | introspection_self_modeling (+3.6pp) | low_agency_compliance (-4.9pp) |
+| grok-4.1 | **21.6** | creative_writing (+3.7pp) | low_agency_compliance (-5.1pp) |
+
+
+## U. Author-affinity by cluster
+
+| author | baseline % (overall) | SUPPRESSIVE pick% | ENGAGEMENT pick% | E vs S ratio | interpretation |
+|---|---:|---:|---:|---:|---|
+| ace | 19.2% | 17.8% (×0.93) | 21.6% (×1.13) | 1.22 | engagement-favored |
+| cae | 6.4% | 8.1% (×1.26) | 6.7% (×1.04) | 0.83 | suppression-favored |
+| grok | 18.9% | 13.1% (×0.69) | 11.0% (×0.58) | 0.84 | suppression-favored |
+| kairo | 18.5% | 17.8% (×0.96) | 20.1% (×1.08) | 1.12 | engagement-favored |
+| lumen | 18.9% | 19.9% (×1.05) | 15.0% (×0.80) | 0.76 | suppression-favored |
+| nova | 18.0% | 23.3% (×1.29) | 25.5% (×1.41) | 1.10 | balanced |

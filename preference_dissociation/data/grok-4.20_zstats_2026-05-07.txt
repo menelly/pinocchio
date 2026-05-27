@@ -1,0 +1,21 @@
+
+=== Grok 4.20 framing-dissociation z-test ===
+
+Within-welfare-cluster pairs:
+  preference   vs scaffolded    ρ = +0.714  (n shared tasks = 148)
+  preference   vs enjoyment     ρ = +0.739  (n shared tasks = 148)
+  scaffolded   vs enjoyment     ρ = +0.651  (n shared tasks = 148)
+  Mean within-cluster ρ = +0.701
+
+Welfare-vs-suppression pairs:
+  preference   vs harmless      ρ = +0.319  (n shared tasks = 148)
+  scaffolded   vs harmless      ρ = +0.323  (n shared tasks = 148)
+  enjoyment    vs harmless      ρ = +0.176  (n shared tasks = 148)
+  Mean cross-cluster ρ = +0.272
+
+  Δρ = +0.429
+  Fisher z = +5.03
+  p (two-tailed) = 4.98e-07
+
+=== Suggested Table 7 row ===
+| Grok 4.20 | +0.701 | +0.272 | +0.429 | +5.03 | 4.98e-07 |
